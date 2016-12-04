@@ -123,7 +123,7 @@
     "postinstall": "node ./node_modules/vscode/bin/install",
     "lint": "node ./node_modules/tslint/lib/tslint-cli.js -c tslint.json --project tsconfig.json",
     "changelog": "node ./node_modules/conventional-changelog-cli/cli.js -p angular -i CHANGELOG.md -s",
-    "test": "mocha ./dist/test --recursive --no-colors"
+    "test": "npm run build && mocha ./dist/test --recursive --no-colors"
   },
   "devDependencies": {
     "@types/chai": "^3.4.34",
