@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { ExtensionContext, OutputChannel, window, languages } from 'vscode';
+import { ExtensionContext, OutputChannel, window, languages, workspace } from 'vscode';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient';
 import AureliaCliCommands from './aureliaCLICommands';
 import htmlInvalidCasingActionProvider from './htmlInvalidCasingCodeActionProvider';
@@ -19,5 +19,26 @@ export function activate(context: ExtensionContext) {
   const invalidCasingAction = new htmlInvalidCasingActionProvider();
   invalidCasingAction.activate(context.subscriptions);
   languages.registerCodeActionsProvider('html', invalidCasingAction);
+
+  // Register Aurelia language server
+  const serverModule = context.asAbsolutePath(path.join('dist', 'src', 'server-html', 'main.js'));
+  const debugOptions = { execArgv: ['--nolazy', '--debug=6004'] };
+  const serverOptions: ServerOptions = {
+    debug: { module: serverModule, options: debugOptions, transport: TransportKind.ipc },
+    run: { module: serverModule, transport: TransportKind.ipc },
+  };
+
+  const clientOptions: LanguageClientOptions = {
+    diagnosticCollectionName: 'Aurelia',
+    documentSelector: ['html', 'typescript'],
+    initializationOptions: {},
+    synchronize: {
+      configurationSection: ['aurelia'],
+      fileEvents: workspace.createFileSystemWatcher('**/*.ts')
+    },
+  };
+
+  const client = new LanguageClient('html', 'Aurelia', serverOptions, clientOptions);
+  context.subscriptions.push(client.start());
 
 }

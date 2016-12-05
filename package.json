@@ -34,6 +34,7 @@
   ],
   "activationEvents": [
     "onLanguage:html",
+    "onLanguage:typescript",
     "onCommand:extension.auNew",
     "onCommand:extension.auGenerate",
     "onCommand:extension.auTest",
@@ -43,6 +44,21 @@
   ],
   "main": "./dist/src/client/main",
   "contributes": {
+    "languages": [
+      {
+        "id": "html",
+        "order": 1,
+        "extensions": [
+          ".html"
+        ],
+        "aliases": [
+          "Aurelia HTML"
+        ],
+        "mimetypes": [
+          "text/html"
+        ]
+      }
+    ],
     "grammars": [
       {
         "language": "html",
@@ -123,7 +139,7 @@
     "postinstall": "node ./node_modules/vscode/bin/install",
     "lint": "node ./node_modules/tslint/lib/tslint-cli.js -c tslint.json --project tsconfig.json",
     "changelog": "node ./node_modules/conventional-changelog-cli/cli.js -p angular -i CHANGELOG.md -s",
-    "test": "npm run build && mocha ./dist/test --recursive --no-colors"
+    "test": "npm run build && mocha ./dist/test --recursive --no-colors --reporter min"
   },
   "devDependencies": {
     "@types/chai": "^3.4.34",
@@ -139,6 +155,7 @@
   },
   "dependencies": {
     "aurelia-cli": "^0.21.0",
+    "typescript": "^2.0.10",
     "vscode-languageclient": "^3.0.1-alpha.9",
     "vscode-languageserver": "^3.0.1-alpha.9",
     "vscode-languageserver-types": "^3.0.1-alpha.6",
