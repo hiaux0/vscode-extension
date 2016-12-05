@@ -33,7 +33,7 @@
     "Snippets"
   ],
   "activationEvents": [
-    "onLanguage:html",
+    "onLanguage:aurelia-html",
     "onLanguage:typescript",
     "onCommand:extension.auNew",
     "onCommand:extension.auGenerate",
@@ -46,25 +46,45 @@
   "contributes": {
     "languages": [
       {
-        "id": "html",
+        "id": "aurelia-html",
         "order": 1,
         "extensions": [
           ".html"
         ],
         "aliases": [
-          "Aurelia HTML"
+          "Aurelia HTML",
+          "html"
         ],
         "mimetypes": [
           "text/html"
         ]
-      }
+      },
+      {
+        "id": "aurelia-css",
+        "order": 1,
+        "extensions": [
+          ".css"
+        ],
+        "aliases": [
+          "Aurelia CSS",
+          "css"
+        ],
+        "mimetypes": [
+          "text/css"
+        ]
+      }      
     ],
     "grammars": [
       {
-        "language": "html",
+        "language": "aurelia-html",
         "scopeName": "au.html",
         "path": "./syntaxes/html.json"
-      }
+      },
+      {
+        "language": "aurelia-css",
+        "scopeName": "source.css",
+        "path": "./syntaxes/css.json"
+      }      
     ],
     "commands": [
       {
@@ -116,10 +136,10 @@
     ],
     "configuration": {
       "id": "aurelia",
-      "order": 20,
+      "order": 1,
       "type": "object",
       "title": "Aurelia",
-      "properties": {
+      "properties": {   
         "aurelia.autocomplete.quotes": {
           "type": "string",
           "enum": [

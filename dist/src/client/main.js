@@ -14,7 +14,7 @@ function activate(context) {
     // Register code fix
     const invalidCasingAction = new htmlInvalidCasingCodeActionProvider_1.default();
     invalidCasingAction.activate(context.subscriptions);
-    vscode_1.languages.registerCodeActionsProvider('html', invalidCasingAction);
+    vscode_1.languages.registerCodeActionsProvider('aurelia-html', invalidCasingAction);
     // Register Aurelia language server
     const serverModule = context.asAbsolutePath(path.join('dist', 'src', 'server-html', 'main.js'));
     const debugOptions = { execArgv: ['--nolazy', '--debug=6004'] };
@@ -24,14 +24,13 @@ function activate(context) {
     };
     const clientOptions = {
         diagnosticCollectionName: 'Aurelia',
-        documentSelector: ['html', 'typescript'],
+        documentSelector: ['aurelia-html', 'typescript', 'javascript'],
         initializationOptions: {},
         synchronize: {
-            configurationSection: ['aurelia'],
-            fileEvents: vscode_1.workspace.createFileSystemWatcher('**/*.ts')
+            configurationSection: ['aurelia']
         },
     };
-    const client = new vscode_languageclient_1.LanguageClient('html', 'Aurelia', serverOptions, clientOptions);
+    const client = new vscode_languageclient_1.LanguageClient('aurelia-html', 'Aurelia', serverOptions, clientOptions);
     context.subscriptions.push(client.start());
 }
 exports.activate = activate;

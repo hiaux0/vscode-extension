@@ -23,7 +23,7 @@ documents.onDidChangeContent(change => {
         completionsFromSource.push(result);
     }
     let diagnostics = [];
-    document = documents.get(change.document.uri.replace('.ts', '.html'));
+    document = documents.get(change.document.uri.replace('.ts', '.html').replace('.js', '.html'));
     let lines = document.getText().split(/\r?\n/g);
     lines.forEach((line, i) => {
         let match;
@@ -44,7 +44,7 @@ documents.onDidChangeContent(change => {
             }
         }
     });
-    connection.sendDiagnostics({ uri: change.document.uri.replace('.ts', '.html'), diagnostics });
+    connection.sendDiagnostics({ uri: change.document.uri.replace('.ts', '.html').replace('.js', '.html'), diagnostics });
 });
 let workspacePath;
 connection.onInitialize((params) => {
