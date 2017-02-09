@@ -12,6 +12,7 @@ import { Container } from 'aurelia-dependency-injection';
 import CompletionItemFactory from './CompletionItemFactory';
 import HoverProviderFactory from './HoverProviderFactory';
 import ElementLibrary from './Completions/Library/_elementLibrary';
+import CommandHandler from './aurelia-cli/commandHandler';
 
 // Bind console.log & error to the Aurelia output
 let connection: IConnection = createConnection();
@@ -43,8 +44,22 @@ connection.onInitialize((params: InitializeParams): InitializeResult => {
       completionProvider: { resolveProvider: false, triggerCharacters: ['<', ' ', '.', '[', '"', '\''] },
       hoverProvider: true,
       textDocumentSync: documents.syncKind,
+      executeCommandProvider: { commands: [
+        'aurelia-cli.new', 
+        'aurelia-cli.generate', 
+        'aurelia-cli.build',
+        'aurelia-cli.test',
+        'aurelia-cli.run',
+        'aurelia-cli.run-watch'] 
+      }   
     },
   };
+});
+
+// Handle commands
+let commandHandler = new CommandHandler();
+connection.onExecuteCommand((handler) => {
+  commandHandler.handle(workspacePath, handler.command, handler.arguments);
 });
 
 // Register and get changes to Aurelia settings

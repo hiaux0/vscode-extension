@@ -34,12 +34,12 @@
   ],
   "activationEvents": [
     "onLanguage:aurelia-html",
-    "onCommand:extension.auNew",
-    "onCommand:extension.auGenerate",
-    "onCommand:extension.auTest",
-    "onCommand:extension.auBuild",
-    "onCommand:extension.auRun",
-    "onCommand:extension.auRunWatch"
+    "onCommand:aurelia-cli.new",
+    "onCommand:aurelia-cli.generate",
+    "onCommand:aurelia-cli.test",
+    "onCommand:aurelia-cli.build",
+    "onCommand:aurelia-cli.run",
+    "onCommand:aurelia-cli.run-watch"
   ],
   "main": "./dist/src/client/main",
   "contributes": {
@@ -68,27 +68,27 @@
     ],
     "commands": [
       {
-        "command": "extension.auNew",
+        "command": "aurelia-cli.new",
         "title": "au new"
       },
       {
-        "command": "extension.auGenerate",
+        "command": "aurelia-cli.generate",
         "title": "au generate"
       },
       {
-        "command": "extension.auBuild",
+        "command": "aurelia-cli.build",
         "title": "au build"
       },
       {
-        "command": "extension.auTest",
+        "command": "aurelia-cli.test",
         "title": "au test"
       },
       {
-        "command": "extension.auRun",
+        "command": "aurelia-cli.run",
         "title": "au run"
       },
       {
-        "command": "extension.auRunWatch",
+        "command": "aurelia-cli.run-watch",
         "title": "au run --watch"
       }
     ],

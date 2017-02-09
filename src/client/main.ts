@@ -3,6 +3,7 @@ import { ExtensionContext, OutputChannel, window, languages, SnippetString } fro
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient';
 import AureliaCliCommands from './aureliaCLICommands';
 import htmlInvalidCasingActionProvider from './htmlInvalidCasingCodeActionProvider';
+import CommandFowarder from './commandFowarder';
 
 let outputChannel: OutputChannel;
 
@@ -11,9 +12,6 @@ export function activate(context: ExtensionContext) {
   // Create default output channel
   outputChannel = window.createOutputChannel('aurelia');
   context.subscriptions.push(outputChannel);
-
-  // Register CLI commands
-  context.subscriptions.push(AureliaCliCommands.registerCommands(outputChannel));
 
   // Register code fix
   const invalidCasingAction = new htmlInvalidCasingActionProvider();
@@ -39,5 +37,10 @@ export function activate(context: ExtensionContext) {
 
   const client = new LanguageClient('aurelia-html', 'Aurelia', serverOptions, clientOptions);
   const disposable = client.start();
+  
+  let commandFowarder = new CommandFowarder();
+  context.subscriptions.push(...commandFowarder.register(client));
+
+
   context.subscriptions.push(disposable);
 }
