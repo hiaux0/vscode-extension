@@ -5,6 +5,8 @@ import AureliaCliCommands from './aureliaCLICommands';
 import htmlInvalidCasingActionProvider from './htmlInvalidCasingCodeActionProvider';
 import CommandFowarder from './commandFowarder';
 
+import * as vscode from 'vscode';
+
 let outputChannel: OutputChannel;
 
 export function activate(context: ExtensionContext) {

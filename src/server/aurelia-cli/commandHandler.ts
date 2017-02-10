@@ -1,4 +1,8 @@
-import { UI, CLI } from 'aurelia-cli';
+import { CLI } from 'aurelia-cli';
+
+import * as ui from 'aurelia-cli/lib/ui';
+
+import { Container } from 'aurelia-dependency-injection';
 
 export default class CommandHandler {
 
@@ -7,9 +11,11 @@ export default class CommandHandler {
     let cli = new CLI();
     cli.options.runningLocally = true;
     cli.options.originalBaseDir = projectDirectory;
+    cli.ui = new VsCodeUI();
 
-    //cli.ui = new VsCodeUI();
-    //cli.container.registerInstance(UI, new VsCodeUI());
+    // Replace UI
+    (<Container>cli.container).unregister(ui.UI);
+    cli.container.registerInstance(ui.UI, cli.ui);
 
 
     let commandName = '';
