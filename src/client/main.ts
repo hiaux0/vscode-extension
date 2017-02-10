@@ -11,6 +11,8 @@ let outputChannel: OutputChannel;
 
 export function activate(context: ExtensionContext) {
 
+  console.log('ACTIVATE');
+
   // Create default output channel
   outputChannel = window.createOutputChannel('aurelia');
   context.subscriptions.push(outputChannel);
@@ -36,13 +38,46 @@ export function activate(context: ExtensionContext) {
       configurationSection: ['aurelia'],
     },
   };
-
   const client = new LanguageClient('aurelia-html', 'Aurelia', serverOptions, clientOptions);
-  const disposable = client.start();
+  const disposable = client.start(); 
   
+  setTimeout(() => {
+    
+    client.onRequest('aurelia-cli.ui.ensureAnswer', (answer, question, suggestion) => {
+      
+      return vscode.window.showInputBox({
+        placeHolder: suggestion,
+        prompt: question
+      });
+      
+    });
+
+    client.onRequest('aurelia-cli.ui.question', (text, optionsOrSuggestion) => {
+      let options = optionsOrSuggestion.map(i => new QuickPickOption(i.value, i.displayName, i.description));
+      return vscode.window.showQuickPick(options, { placeHolder : text });    
+    });
+
+    client.onRequest('aurelia-cli.ui.multiselect', (text, optionsOrSuggestion) => {
+      // this.sendRequest('aurelia-cli.ui.multiselect', question, options);
+      // return vscode.window.showInputBox({
+        
+      // });
+      vscode.window.showWarningMessage('multi select not implemented');
+      
+    });
+
+  }, 1000);
+
+
   let commandFowarder = new CommandFowarder();
   context.subscriptions.push(...commandFowarder.register(client));
 
 
+
   context.subscriptions.push(disposable);
+}
+
+
+class QuickPickOption implements vscode.QuickPickItem {
+  constructor(public label: string, public description: string, detail?: string) { }
 }

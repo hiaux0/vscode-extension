@@ -57,7 +57,7 @@ connection.onInitialize((params: InitializeParams): InitializeResult => {
 });
 
 // Handle commands
-let commandHandler = new CommandHandler();
+let commandHandler = new CommandHandler(connection.sendRequest);
 connection.onExecuteCommand((handler) => {
   commandHandler.handle(workspacePath, handler.command, handler.arguments);
 });
