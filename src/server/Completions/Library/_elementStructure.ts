@@ -4,7 +4,7 @@ export class Value {
   }
 }
 
-class BaseAttribute {
+export abstract class BaseAttribute {
   constructor(
     public documentation: string,
     public url: string,
@@ -783,9 +783,9 @@ export class GlobalAttributes {
   ]);  
 }
 
-export class BaseElement {
+export abstract class BaseElement {
 
-  protected url: string;
+  public abstract url: string;
   public hasGlobalAttributes = true;
   public hasGlobalEvents = true;
 
@@ -793,10 +793,13 @@ export class BaseElement {
   public events: Map<string, Event> = new Map<string, Event>();
 }
 
-export class MozDocElement extends BaseElement {
+export abstract class MozDocElement extends BaseElement {
   public get licenceText() {
     return `MDN by Mozilla Contributors (${this.url}$history) is licensed under CC-BY-SA 2.5.`;
   }
+
+  public url: string;
+  public abstract documentation: string;
 
   public permittedChildren: Array<string> = [];
   public notPermittedChildren: Array<string> = [];
@@ -805,4 +808,11 @@ export class MozDocElement extends BaseElement {
 
   public ariaRoles: Array<string> = [];
   public areaRolesAllowed: boolean = true;
+}
+
+export abstract class AureliaElement extends BaseElement {
+
+  public url: string;
+  public abstract documentation: string;
+
 }

@@ -2,10 +2,10 @@ import { BaseElement } from './_elementStructure';
 
 export default class UnknownElement extends BaseElement {
 
-  public documentation = ``;
+  public documentation = undefined;
+  public url = undefined;
 
   constructor() {
     super();
-    this.url = '';
   }
 }

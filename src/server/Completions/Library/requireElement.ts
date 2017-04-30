@@ -1,6 +1,6 @@
-import { SimpleAttribute, BaseElement } from './_elementStructure';
+import { SimpleAttribute, AureliaElement } from './_elementStructure';
 
-export default class AureliaRequireElement extends BaseElement {
+export default class AureliaRequireElement extends AureliaElement {
 
   public documentation = `"import" or "require" various resources into a view. Equivalent of the ES 2015 "import" syntax`;
 
