@@ -12,6 +12,9 @@ import { Container } from 'aurelia-dependency-injection';
 import CompletionItemFactory from './CompletionItemFactory';
 import ElementLibrary from './Completions/Library/_elementLibrary';
 import AureliaSettings from './AureliaSettings';
+import ProcessFiles from './FileParser/ProcessFiles';
+import {fileUriToPath} from './Util/FileUriToPath';
+import {AureliaApplication} from './FileParser/Model/AureliaApplication';
 
 // Bind console.log & error to the Aurelia output
 let connection: IConnection = createConnection();
@@ -19,22 +22,29 @@ console.log = connection.console.log.bind(connection.console);
 console.error = connection.console.error.bind(connection.console);
 
 // Cache documents
-let documents: TextDocuments = new TextDocuments();
+const documents: TextDocuments = new TextDocuments();
 documents.listen(connection);
-let htmlDocuments = getLanguageModelCache<HTMLDocument>(10, 60, document => getLanguageService().parseHTMLDocument(document));
-documents.onDidClose(e => htmlDocuments.onDocumentRemoved(e.document));
-connection.onShutdown(() => htmlDocuments.dispose());
 
 // Setup Aurelia dependency injection
 let globalContainer = new Container();
 let completionItemFactory = <CompletionItemFactory> globalContainer.get(CompletionItemFactory);
+let aureliaApplication = <AureliaApplication> globalContainer.get(AureliaApplication);
+
+let rootPath;
+let webcomponents = [];
 
 // Register characters to lisen for
-connection.onInitialize((params: InitializeParams): InitializeResult => {
+connection.onInitialize(async (params: InitializeParams): Promise<InitializeResult> => {
   
-  // TODO: find better way to init this
+   // TODO: find better way to init this
   let dummy = globalContainer.get(ElementLibrary);
-  
+  rootPath = params.rootPath;
+
+  let fileProcessor = new ProcessFiles();
+  await fileProcessor.processPath(rootPath);
+  webcomponents = fileProcessor.components;
+  aureliaApplication.components = fileProcessor.components;
+
   return {
     capabilities: {
       completionProvider: { resolveProvider: false, triggerCharacters: ['<', ' ', '.', '[', '"', '\''] },
@@ -49,13 +59,18 @@ connection.onDidChangeConfiguration(change => {
   settings.quote = change.settings.aurelia.autocomplete.quotes === 'single' ? '\'' : '"';
 });
 
-// Setup Validation
-let languageService = getLanguageService();
-documents.onDidChangeContent(async change => {
-  let htmlDocument = htmlDocuments.get(change.document);
-  const diagnostics = await languageService.doValidation(change.document, htmlDocument);
-  connection.sendDiagnostics({ uri: change.document.uri, diagnostics });
+documents.onDidClose(event => {
+  if (event.document.languageId === 'html') {
+    console.log('remove document');
+  }
 });
+
+documents.onDidChangeContent(event => {
+  if (event.document.languageId === 'html') {
+    console.log('html document changed' + fileUriToPath(event.document.uri));
+  }
+});
+
 
 // Lisen for completion requests
 connection.onCompletion(textDocumentPosition => {
@@ -66,5 +81,12 @@ connection.onCompletion(textDocumentPosition => {
   let position = textDocumentPosition.position;
   return completionItemFactory.create(triggerCharacter, position, text, offset, textDocumentPosition.textDocument.uri);
 });
+
+//
+connection.onRequest('aurelia-view-information', (filePath: string) => {
+  const component = webcomponents.find(doc => doc.paths.indexOf(filePath) > -1);
+  return component;
+});
+
 
 connection.listen();

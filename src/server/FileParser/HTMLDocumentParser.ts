@@ -1,7 +1,7 @@
 import { AST, SAXParser } from 'parse5'; 
 import { Readable } from 'stream';
 
-export class DocumentParser {
+export class HTMLDocumentParser {
 
   public parse(text: string): Promise<Array<TagDefinition>> {
     return new Promise((resolve, reject) => {

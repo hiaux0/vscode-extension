@@ -27,7 +27,10 @@
       "port": 6100,
       "sourceMaps": true,
       "outFiles": ["${workspaceRoot}/dist/src/server/**/*.js"],
-      "protocol": "legacy"
+      "protocol": "legacy",
+      "runtimeArgs": [
+        "--debug=6100"
+    ]
     }
   ]
 }
