@@ -4,6 +4,7 @@ import { autoinject } from 'aurelia-dependency-injection';
 
 import { OneWayDeprecatedValidation } from './Attribute/OneWayDeprecatedValidation';
 import { InValidAttributeCasingValidation } from './Attribute/InValidAttributeCasingValidation';
+import { IfBindingConflictingAttributesValidation } from './Attribute/IfBindingConflictingAttributesValidation';
 import AureliaSettings from '../AureliaSettings';
 
 @autoinject()
@@ -15,11 +16,13 @@ export class HtmlValidator {
   constructor(
     oneWayDeprecatedValidation: OneWayDeprecatedValidation,
     inValidAttributeCasingValidation: InValidAttributeCasingValidation,
+    ifBindingConflictingAttributesValidation: IfBindingConflictingAttributesValidation,
     private settings: AureliaSettings) {
 
     this.attributeValidators.push(
       oneWayDeprecatedValidation,
-      inValidAttributeCasingValidation
+      inValidAttributeCasingValidation,
+      ifBindingConflictingAttributesValidation
     );
   }
 
