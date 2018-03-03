@@ -1,3 +1,63 @@
+<a name="1.0.3"></a>
+## [1.0.3](https://github.com/aurelia/vscode-extension/compare/1.0.2...1.0.3) (2018-02-28)
+
+
+### Bug Fixes
+
+* **syntax:** implement fix from darthInvad0r for string interpolation, resolves [#79](https://github.com/aurelia/vscode-extension/issues/79) ([#83](https://github.com/aurelia/vscode-extension/issues/83)) ([9d7017f](https://github.com/aurelia/vscode-extension/commit/9d7017f))
+
+
+### Features
+
+* **syntax:** upgrade html syntax to latest and support .au files ([#82](https://github.com/aurelia/vscode-extension/issues/82)) ([b1884f7](https://github.com/aurelia/vscode-extension/commit/b1884f7))
+
+
+
+<a name="1.0.2"></a>
+## [1.0.2](https://github.com/aurelia/vscode-extension/compare/1.0.1...1.0.2) (2018-02-26)
+
+
+### Bug Fixes
+
+* **smart-autocomplete:** don't fail on undefined location for attribute, resolves [#74](https://github.com/aurelia/vscode-extension/issues/74) ([#75](https://github.com/aurelia/vscode-extension/issues/75)) ([ac71258](https://github.com/aurelia/vscode-extension/commit/ac71258))
+* **syntax:** string interpolation regex crashed when holding spacebar ([#81](https://github.com/aurelia/vscode-extension/issues/81)) ([e864c5e](https://github.com/aurelia/vscode-extension/commit/e864c5e))
+
+
+
+<a name="1.0.1"></a>
+## [1.0.1](https://github.com/aurelia/vscode-extension/compare/1.0.0...1.0.1) (2018-01-27)
+
+
+### Bug Fixes
+
+* **dependencies:** move Typescript from devDependencies to Dependencies ([f68830b](https://github.com/aurelia/vscode-extension/commit/f68830b))
+* **diagnostics:** suggest lowercase variant, not the JavaScript name for items in attributeMap, resolves [#72](https://github.com/aurelia/vscode-extension/issues/72) ([#73](https://github.com/aurelia/vscode-extension/issues/73)) ([cfd831f](https://github.com/aurelia/vscode-extension/commit/cfd831f))
+
+
+
+<a name="1.0.0"></a>
+# [1.0.0](https://github.com/aurelia/vscode-extension/compare/0.3.4...1.0.0) (2018-01-23)
+
+
+### Bug Fixes
+
+* **auto-complete:** suggest with as with.bind ([ea625e1](https://github.com/aurelia/vscode-extension/commit/ea625e1))
+* **codefix:** use the Aurelia attribute map to validate case of attributes, resolves [#54](https://github.com/aurelia/vscode-extension/issues/54) ([b143ce8](https://github.com/aurelia/vscode-extension/commit/b143ce8))
+* **related-file:** add editor column index when opening related file ([#57](https://github.com/aurelia/vscode-extension/issues/57)) ([70875d2](https://github.com/aurelia/vscode-extension/commit/70875d2)), closes [#51](https://github.com/aurelia/vscode-extension/issues/51)
+* **syntax:** tokenize string interpolation end character correctly, fixes [#48](https://github.com/aurelia/vscode-extension/issues/48) ([0921158](https://github.com/aurelia/vscode-extension/commit/0921158))
+* **themes:** add scope for let element ([#63](https://github.com/aurelia/vscode-extension/issues/63)) ([057cdfc](https://github.com/aurelia/vscode-extension/commit/057cdfc))
+
+
+### Features
+
+* **auto-complete:** data binding auto complete configuration option, resolves [#53](https://github.com/aurelia/vscode-extension/issues/53) ([#64](https://github.com/aurelia/vscode-extension/issues/64)) ([06815bd](https://github.com/aurelia/vscode-extension/commit/06815bd))
+* **auto-complete:** experimental auto complete from view model (behind feature toggle: smartAutocomplete) ([7312b03](https://github.com/aurelia/vscode-extension/commit/7312b03))
+* **diagnostics:** code action & diagnostic warning to convert 'one-way' to 'to-view' ([#66](https://github.com/aurelia/vscode-extension/issues/66)) ([2eb4ee1](https://github.com/aurelia/vscode-extension/commit/2eb4ee1))
+* **syntax-highlight:** Add the let command, resolves [#55](https://github.com/aurelia/vscode-extension/issues/55) ([#60](https://github.com/aurelia/vscode-extension/issues/60)) ([5bcdfce](https://github.com/aurelia/vscode-extension/commit/5bcdfce))
+* **vscode:** update vscode engine version and packages to latest ([8caa55b](https://github.com/aurelia/vscode-extension/commit/8caa55b))
+
+
+
 <a name="0.3.4"></a>
 ## [0.3.4](https://github.com/aurelia/vscode-extension/compare/0.3.3...v0.3.4) (2017-05-29)
 
