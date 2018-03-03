@@ -1,5 +1,5 @@
 import { Diagnostic, DiagnosticSeverity, Range, TextDocument } from 'vscode-languageserver-types';
-import {AttributeDefinition, TagDefinition } from './../../DocumentParser';
+import {AttributeDefinition, TagDefinition } from './../../FileParser/HTMLDocumentParser';
 
 export class IfBindingConflictingAttributesValidation {
   
@@ -21,7 +21,7 @@ export class IfBindingConflictingAttributesValidation {
     );
     
     return <Diagnostic> {
-      message: `if attribute cannot be used together with ${causedAttribute.name}.${causedAttribute.binding} on the same element`,
+      message: `if attribute cannot be used together with ${causedAttribute.name}.${causedAttribute.binding} on the same element, use show`,
       range: Range.create(document.positionAt(attributeStartOffset), document.positionAt(attributeEndOffset)),
       severity: DiagnosticSeverity.Error,
       source: 'Aurelia',

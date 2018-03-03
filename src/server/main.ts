@@ -18,6 +18,7 @@ import ProcessFiles from './FileParser/ProcessFiles';
 import { HtmlValidator } from './Validations/HtmlValidator';
 import { HtmlInvalidCaseCodeAction } from './CodeActions/HtmlInvalidCaseCodeAction';
 import { OneWayBindingDeprecatedCodeAction } from './CodeActions/OneWayBindingDeprecatedCodeAction';
+import { IfBindingConflictingCodeAction } from './CodeActions/IfBindingConflictingCodeAction';
 
 import * as ts from 'typescript';
 import { AureliaApplication } from './FileParser/Model/AureliaApplication';
@@ -55,7 +56,8 @@ connection.onInitialize(async (params: InitializeParams): Promise<InitializeResu
 
 const codeActions = [
   new HtmlInvalidCaseCodeAction(),
-  new OneWayBindingDeprecatedCodeAction()
+  new OneWayBindingDeprecatedCodeAction(),
+  new IfBindingConflictingCodeAction()
 ];
 connection.onCodeAction(async codeActionParams => {
   const diagnostics = codeActionParams.context.diagnostics;
