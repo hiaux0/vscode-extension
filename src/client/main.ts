@@ -36,6 +36,7 @@ export function activate(context: ExtensionContext) {
   };
   context.subscriptions.push(commands.registerCommand('aurelia-attribute-invalid-case', edit));
   context.subscriptions.push(commands.registerCommand('aurelia-binding-one-way-deprecated', edit));
+  context.subscriptions.push(commands.registerCommand('aurelia-repeat-with-if-binding', edit));
 
   // Register Aurelia language server
   const serverModule = context.asAbsolutePath(path.join('dist', 'src', 'server', 'main.js'));
