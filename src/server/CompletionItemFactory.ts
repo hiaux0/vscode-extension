@@ -60,7 +60,7 @@ export default class CompletionItemFactory {
           } 
         
         // inside attribute, perform attribute completion
-        } else if (triggerCharacter === '"' || triggerCharacter === '\'') {
+        } else if (triggerCharacter === '"' || triggerCharacter === '\'' || triggerCharacter === '.') {
                 return this.createValueCompletion(insideTag, text, positionNumber, uri);
         } else {
           return [];
@@ -81,7 +81,7 @@ export default class CompletionItemFactory {
     for(let char of tagText) {
       if (char === '"') double += 1;
       if (char === '\'') single += 1;
-    }    
+    }   
     return single % 2 == 0 && double % 2 == 0;
   }
 
@@ -113,19 +113,17 @@ export default class CompletionItemFactory {
       const attributeRegex = /([\w-]+)\.?\w*\=['"]/g;
       let matches;
       while (matches = attributeRegex.exec(elementText)) {
-        if (tagPosition >= matches.index && (tagPosition <= matches.index + matches[0].length)) {
           let foundText = matches[1];
           let attributes = tag.attributes.filter(a => a && a.name == foundText);
           if (attributes.length) {
             attribute = attributes[0];
             break;
           }
-        }  
       }
       if (!attribute) {
         return [];
       }
-      return this.attributeValueCompletionFactory.create(tag.name, attribute.name, attribute.binding, uri);
+      return this.attributeValueCompletionFactory.create(tag.name, attribute.name, attribute.binding, uri, position, attribute.value);
     }
   }
 

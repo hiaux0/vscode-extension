@@ -317,7 +317,7 @@
             },
             {
               "begin": "\\G",
-              "end": "(?i:(?=/?>|type(?=[\\s=])(?!\\s*=\\s*('|\"|)(text/(javascript|ecmascript|babel)|application/((x-)?javascript|ecmascript|babel)|module)[\\s\"'>])))",
+              "end": "(?i:(?=/?>|type(?=[\\s=])(?!\\s*=\\s*('|\"|)(text/(javascript|ecmascript|babel|typescript)|application/((x-)?javascript|ecmascript|babel|typescript)|module)[\\s\"'>])))",
               "name": "meta.tag.metadata.script.html",
               "patterns": [{
                 "include": "#tag-stuff"

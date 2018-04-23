@@ -14,8 +14,6 @@ import CompletionItemFactory from './CompletionItemFactory';
 import ElementLibrary from './Completions/Library/_elementLibrary';
 import AureliaSettings from './AureliaSettings';
 
-import ProcessFiles from './FileParser/ProcessFiles';
-
 import { HtmlValidator } from './Validations/HtmlValidator';
 import { HtmlInvalidCaseCodeAction } from './CodeActions/HtmlInvalidCaseCodeAction';
 import { OneWayBindingDeprecatedCodeAction } from './CodeActions/OneWayBindingDeprecatedCodeAction';
@@ -24,6 +22,9 @@ import * as ts from 'typescript';
 import { AureliaApplication } from './FileParser/Model/AureliaApplication';
 import { normalizePath } from './Util/NormalizePath';
 import { connect } from 'net';
+import FileParser from './FileParser/FileParser';
+import { FileAccess } from './FileParser/FileAccess';
+import { Workspace } from './Workspace';
 
 // Bind console.log & error to the Aurelia output
 const connection: IConnection = createConnection();
@@ -35,13 +36,16 @@ documents.listen(connection);
 
 // Setup Aurelia dependency injection
 const globalContainer = new Container();
-const completionItemFactory = <CompletionItemFactory> globalContainer.get(CompletionItemFactory);
-const aureliaApplication = <AureliaApplication> globalContainer.get(AureliaApplication);
-const settings = <AureliaSettings> globalContainer.get(AureliaSettings);
+const completionItemFactory = globalContainer.get(CompletionItemFactory) as CompletionItemFactory;
+const aureliaApplication = globalContainer.get(AureliaApplication) as AureliaApplication;
+const settings = globalContainer.get(AureliaSettings) as AureliaSettings;
+const workspace = globalContainer.get(Workspace) as Workspace;
 
 // Register characters to lisen for
 connection.onInitialize(async (params: InitializeParams): Promise<InitializeResult> => {
   
+  workspace.path = params.rootPath;
+
   // TODO: find better way/place to init this
   const dummy = globalContainer.get(ElementLibrary);
   
@@ -52,6 +56,22 @@ connection.onInitialize(async (params: InitializeParams): Promise<InitializeResu
       textDocumentSync: documents.syncKind,
     },
   };
+});
+
+
+const fileParser = new FileParser();
+
+documents.onDidChangeContent(async change => {
+  workspace.files.set(change.document.uri, await fileParser.parse(change.document.uri, change.document.getText()));
+});
+
+connection.onRequest('aurelia-view-information', async (uri: string) => {
+
+  if (!workspace.files.has(uri)) {
+    const fileAccess = new FileAccess();
+    workspace.files.set(uri, await fileParser.parse(uri, fileAccess.readFileContent(uri)));
+  }
+  return workspace.files.get(uri);
 });
 
 const codeActions = [
@@ -72,17 +92,17 @@ connection.onCodeAction(async codeActionParams => {
 });
 
 // Register and get changes to Aurelia settings
-connection.onDidChangeConfiguration(async (change) => { 
+connection.onDidChangeConfiguration((change) => { 
   settings.quote = change.settings.aurelia.autocomplete.quotes === 'single' ? '\'' : '"';
   settings.validation = change.settings.aurelia.validation;
   settings.bindings.data = change.settings.aurelia.autocomplete.bindings.data;
   settings.featureToggles = change.settings.aurelia.featureToggles;
 
-  await featureToggles(settings.featureToggles);
+  //await featureToggles(settings.featureToggles);
 });
 
 // Setup Validation
-const validator = <HtmlValidator> globalContainer.get(HtmlValidator);
+const validator = globalContainer.get(HtmlValidator) as HtmlValidator;
 documents.onDidChangeContent(async change => {
   const diagnostics = await validator.doValidation(change.document);
   connection.sendDiagnostics({ uri: change.document.uri, diagnostics });
@@ -106,16 +126,16 @@ connection.onRequest('aurelia-view-information', (filePath: string) => {
 connection.listen();
 
 
-async function featureToggles(featureToggles) {
-  if (settings.featureToggles.smartAutocomplete) {
-    console.log('smart auto complete init');
-    try {
-      let fileProcessor = new ProcessFiles();
-      await fileProcessor.processPath();
-      aureliaApplication.components = fileProcessor.components;
-    } catch (ex) {
-      console.log('------------- FILE PROCESSOR ERROR ---------------------');
-      console.log(JSON.stringify(ex));
-    }
-  }
-}
+// async function featureToggles(featureToggles) {
+//   if (settings.featureToggles.smartAutocomplete) {
+//     console.log('smart auto complete init');
+//     try {
+//       let fileProcessor = new ProcessFiles();
+//       await fileProcessor.processPath();
+//       aureliaApplication.components = fileProcessor.components;
+//     } catch (ex) {
+//       console.log('------------- FILE PROCESSOR ERROR ---------------------');
+//       console.log(JSON.stringify(ex));
+//     }
+//   }
+// }

@@ -5,6 +5,8 @@ import { autoinject } from 'aurelia-dependency-injection';
 import { OneWayDeprecatedValidation } from './Attribute/OneWayDeprecatedValidation';
 import { InValidAttributeCasingValidation } from './Attribute/InValidAttributeCasingValidation';
 import AureliaSettings from '../AureliaSettings';
+import { getLanguageService } from '../FileParser/AureliaLanguageServiceHost';
+import { fileUriToPath } from '../Util/FileUriToPath';
 
 @autoinject()
 export class HtmlValidator {
@@ -44,13 +46,10 @@ export class HtmlValidator {
           .filter(validator => validator.match(attribute, element, document))
           .forEach(validator => diagnostics.push(validator.diagnostic(attribute, element, document)))
       }
-    }
+    }    
 
     return Promise.resolve(diagnostics);
   }  
 }
-
-
-
 
 
