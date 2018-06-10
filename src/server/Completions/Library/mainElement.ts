@@ -1,9 +1,9 @@
-import { MozDocElement } from './_elementStructure';
+import { MozDocElement } from './ElementStructure/MozDocElement';
 
 export default class MainElement extends MozDocElement {
 
-  public documentation = `The HTML <main> element represents the main content of  the <body> of a 
-  document or application. The main content area consists of content that is directly related to, 
+  public documentation = `The HTML <main> element represents the main content of  the <body> of a
+  document or application. The main content area consists of content that is directly related to,
   or expands upon the central topic of a document or the central functionality of an application.`;
 
   constructor() {

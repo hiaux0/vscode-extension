@@ -1,22 +1,24 @@
-import { BindableAttribute, Value, MozDocElement } from './_elementStructure';
+import { BindableAttribute } from './ElementStructure/BindableAttribute';
+import { MozDocElement } from './ElementStructure/MozDocElement';
+import { Value } from './ElementStructure/Value';
 
 export default class InputElement extends MozDocElement {
 
-  public documentation = `The HTML <input> element is used to create interactive controls for web-based forms in 
-  order to accept data from the user. How an <input> works varies considerably depending on the value of its 
+  public documentation = `The HTML <input> element is used to create interactive controls for web-based forms in
+  order to accept data from the user. How an <input> works varies considerably depending on the value of its
   type attribute.`;
 
   constructor() {
     super();
     this.url = 'https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input';
 
-    this.attributes.set('type', 
-      new BindableAttribute('The type of control to display. The default type is text, if this attribute is not specified.', 
+    this.attributes.set('type',
+      new BindableAttribute('The type of control to display. The default type is text, if this attribute is not specified.',
           null,
           null,
           null,
           null,
-          new Map([ 
+          new Map([
             ['button', new Value(`A push button with no default behavior.`)],
             ['checkbox', new Value(`A check box. You must use the value attribute to define the value submitted by this item. Use the checked attribute to indicate whether this item is selected. You can also use the indeterminate attribute (which can only be set programmatically) to indicate that the checkbox is in an indeterminate state (on most platforms, this draws a horizontal line across the checkbox).`)],
             ['color', new Value(`HTML5 A control for specifying a color. A color picker's UI has no required features other than accepting simple colors as text (more info).`)],
@@ -38,12 +40,12 @@ export default class InputElement extends MozDocElement {
             ['text', new Value(`A single-line text field. Line-breaks are automatically removed from the input value.`)],
             ['time', new Value(`A control for entering a time value with no time zone.`)],
             ['url', new Value(`A field for editing a URL. The input value is validated to contain either the empty string or a valid absolute URL before submitting. Line-breaks and leading or trailing whitespace are automatically removed from the input value. You can use attributes such as pattern and maxlength to restrict values entered in the control. The :valid and :invalid CSS pseudo-classes are applied as appropriate.`)],
-            ['week', new Value(`A control for entering a date consisting of a week-year number and a week number with no time zone.`)]                                  
+            ['week', new Value(`A control for entering a date consisting of a week-year number and a week number with no time zone.`)],
         ])));
-    this.attributes.set('accept', 
+    this.attributes.set('accept',
       new BindableAttribute(`If the value of the type attribute is file, then this attribute will indicate the types of files that the server accepts, otherwise it will be ignored.`));
     this.attributes.set('autocomplete',
-      new BindableAttribute(`This attribute indicates whether the value of the control can be automatically completed by the browser.`, 
+      new BindableAttribute(`This attribute indicates whether the value of the control can be automatically completed by the browser.`,
           null,
           null,
           null,
@@ -69,13 +71,13 @@ export default class InputElement extends MozDocElement {
             ['country', new Value(`country`)],
             ['country-name', new Value(`country-name`)],
             ['postal-code', new Value(`postal-code`)],
-            ['cc-name', new Value(`Full name as given on the payment instrument.`)],  
+            ['cc-name', new Value(`Full name as given on the payment instrument.`)],
             ['cc-given-name', new Value(`cc-given-name`)],
             ['cc-additional-name', new Value(`cc-additional-name`)],
-            ['cc-family-name', new Value(`cc-family-name`)],  
+            ['cc-family-name', new Value(`cc-family-name`)],
             ['cc-number', new Value(`Code identifying the payment instrument (e.g. the credit card number).`)],
             ['cc-exp', new Value(`Expiration date of the payment instrument.`)],
-            ['cc-exp-month', new Value(`cc-exp-month`)],  
+            ['cc-exp-month', new Value(`cc-exp-month`)],
             ['cc-exp-year', new Value(`cc-exp-year`)],
             ['cc-csc', new Value(`Security code for the payment instrument.`)],
             ['cc-type', new Value(`Type of payment instrument (e.g. Visa).`)],
@@ -89,7 +91,7 @@ export default class InputElement extends MozDocElement {
             ['sex', new Value(`Gender identity (e.g. Female, Fa'afafine), free-form text, no newlines.`)],
             ['tel', new Value(`tel`)],
             ['url', new Value(`Home page or other Web page corresponding to the company, person, address, or contact information in the other fields associated with this field.`)],
-            ['photo', new Value(`Photograph, icon, or other image corresponding to the company, person, address, or contact information in the other fields associated with this field.`)],                                                                                                                     
+            ['photo', new Value(`Photograph, icon, or other image corresponding to the company, person, address, or contact information in the other fields associated with this field.`)],
           ])));
   }
 }

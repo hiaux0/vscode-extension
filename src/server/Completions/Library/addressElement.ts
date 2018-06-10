@@ -1,8 +1,8 @@
-import { MozDocElement } from './_elementStructure';
+import { MozDocElement } from './ElementStructure/MozDocElement';
 
 export default class AddressElement extends MozDocElement {
 
-  public documentation = `The HTML <address> element supplies contact information for its nearest 
+  public documentation = `The HTML <address> element supplies contact information for its nearest
   <article> or <body> ancestor; in the latter case, it applies to the whole document.`;
 
   constructor() {

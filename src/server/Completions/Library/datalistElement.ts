@@ -1,8 +1,8 @@
-import { MozDocElement } from './_elementStructure';
+import { MozDocElement } from './ElementStructure/MozDocElement';
 
 export default class DataListElement extends MozDocElement {
 
-  public documentation = `The HTML <datalist> element contains a set of <option> elements that represent 
+  public documentation = `The HTML <datalist> element contains a set of <option> elements that represent
   the values available for other controls.`;
 
   constructor() {

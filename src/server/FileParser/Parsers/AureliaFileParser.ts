@@ -1,14 +1,15 @@
-import { AuFile, IFileParser } from "../FileParser";
-import { HTMLDocumentParser, TagDefinition } from "../HTMLDocumentParser";
-import { Parser } from "aurelia-binding";
+import { Parser } from 'aurelia-binding';
 import { sys } from 'typescript';
+import { AuFile } from '../AuFile';
+import { IFileParser } from '../FileParser';
+import { HTMLDocumentParser, TagDefinition } from '../HTMLDocumentParser';
 
 export class AureliaFileParser implements IFileParser {
-  
+
   public async parse(path: string, content: string): Promise<AuFile> {
-    
+
     const document = await this.getHtmlDocument(content);
-    
+
     const auFile = new AuFile();
     auFile.fileName = path;
     auFile.singleFileComponent = path.endsWith('.au');
@@ -19,55 +20,54 @@ export class AureliaFileParser implements IFileParser {
       auFile.typescriptBlocks.push({ code: tsContent, className: 'foo' });
     }
 
+    for (const tagDef of document) {
 
-    for(const tagDef of document) {
-      
       if (tagDef.startTag) {
 
-        switch(tagDef.name) {
+        switch (tagDef.name) {
           case 'template':
             auFile.templateBindings = this.getBindableValuesFrom(tagDef);
-          break;
+            break;
           case 'import':
           case 'require':
             auFile.imports.push(this.processImport(tagDef));
-          break;
+            break;
           case 'script':
-            const typeAttribute = tagDef.attributes.find(attr => attr.name === 'type');
-            
+            const typeAttribute = tagDef.attributes.find((attr) => attr.name === 'type');
+
             if (typeAttribute) {
               const scriptType = typeAttribute.value;
-            
-              switch(scriptType) {
+
+              switch (scriptType) {
                 case 'application/javascript':
                   auFile.javascriptBlocks.push({ startTag: tagDef });
-                break;
+                  break;
                 case 'application/typescript':
                   auFile.typescriptBlocks.push({ startTag: tagDef });
-                break;            
+                  break;
               }
             }
             break;
           case 'style':
-            console.log('found style tag');
-          break;
+            // console.log('found style tag');
+            break;
           default:
-            const commands = tagDef.attributes.filter(attr => attr.binding);
+            const commands = tagDef.attributes.filter((attr) => attr.binding);
             const aureliaParser = new Parser();
-            for (let command of commands) {
+            for (const command of commands) {
               auFile.commands.push({
+                bindingData: aureliaParser.parse(command.value),
+                bindingType: command.binding,
                 name: command.name,
                 value: command.value,
-                bindingType: command.binding,
-                bindingData: aureliaParser.parse(command.value)
               });
             }
-          break;
+            break;
           }
       } else {
 
         // closing tags
-        switch(tagDef.name) {
+        switch (tagDef.name) {
           case 'script':
             const lastTypeScriptStartTag = auFile.typescriptBlocks[auFile.typescriptBlocks.length - 1];
             const lastJavaScriptStartTag = auFile.javascriptBlocks[auFile.javascriptBlocks.length - 1];
@@ -83,9 +83,8 @@ export class AureliaFileParser implements IFileParser {
               lastJavaScriptStartTag.endTag = tagDef;
               lastJavaScriptStartTag.code = content.substring(lastJavaScriptStartTag.startTag.endOffset, tagDef.startOffset);
 
-
             }
-          break;
+            break;
         }
       }
 
@@ -103,32 +102,33 @@ export class AureliaFileParser implements IFileParser {
   }
 
   private getBindableValuesFrom(templateTag) {
-    const bindableAttribute = templateTag.attributes.find(attribute => attribute.name === 'bindable');
+    const bindableAttribute = templateTag.attributes.find((attribute) => attribute.name === 'bindable');
     if (bindableAttribute && bindableAttribute.value) {
-      return bindableAttribute.value.split(',').map(i => i.trim());
+      return bindableAttribute.value.split(',').map((i) => i.trim());
     } else {
       return [];
     }
-  }  
+  }
 
   private processImport(requireElement: TagDefinition) {
-    const pathAttribute = requireElement.attributes.find(attr => attr.name === 'from');
-    const asAttribute = requireElement.attributes.find(attr => attr.name === 'as');
+    const pathAttribute = requireElement.attributes.find((attr) => attr.name === 'from');
+    const asAttribute = requireElement.attributes.find((attr) => attr.name === 'as');
     return { from: pathAttribute.value, as: asAttribute ? asAttribute.value : undefined};
   }
 
   private getStringInterpolationBindings(fileContent) {
-    let bindings = [];
+    const bindings = [];
     const aureliaParser = new Parser();
     const interpolationRegex = /\$\{(.*)\}/g;
-    var match;
+    let match;
+    // tslint:disable-next-line:no-conditional-assignment
     while (match = interpolationRegex.exec(fileContent)) {
       bindings.push({
+        bindingData: aureliaParser.parse(match[1]),
         value: match[0],
-        bindingData: aureliaParser.parse(match[1])
       });
     }
 
     return bindings;
-  }  
+  }
 }

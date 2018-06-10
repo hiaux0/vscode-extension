@@ -1,8 +1,8 @@
-import { MozDocElement } from './_elementStructure';
+import { MozDocElement } from './ElementStructure/MozDocElement';
 
 export default class NavElement extends MozDocElement {
 
-  public documentation = `The HTML <nav> element represents a section of a page that links to other pages or to 
+  public documentation = `The HTML <nav> element represents a section of a page that links to other pages or to
   parts within the page: a section with navigation links.`;
 
   constructor() {

@@ -1,8 +1,9 @@
-import { BindableAttribute, MozDocElement } from './_elementStructure';
+import { BindableAttribute } from './ElementStructure/BindableAttribute';
+import { MozDocElement } from './ElementStructure/MozDocElement';
 
 export default class HtmlElement extends MozDocElement {
 
-  public documentation = `The HTML <html> element represents the root (top-level element) of an HTML document, 
+  public documentation = `The HTML <html> element represents the root (top-level element) of an HTML document,
   so it is also referred to as the root element. All other elements must be descendants of this element.`;
 
   constructor() {

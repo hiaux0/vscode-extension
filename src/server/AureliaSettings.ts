@@ -2,10 +2,10 @@ export default class AureliaSettings {
   public quote: string = '"';
   public validation: boolean = true;
   public bindings = {
-    data : []
-  }
+    data : [],
+  };
 
   public featureToggles = {
-    smartAutocomplete : true
-  }
+    smartAutocomplete : true,
+  };
 }

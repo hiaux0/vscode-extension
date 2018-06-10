@@ -1,25 +1,25 @@
-import { 
-  CompletionItem, 
-  CompletionItemKind, 
-  InsertTextFormat, MarkedString } from 'vscode-languageserver';
 import { autoinject } from 'aurelia-dependency-injection';
-import ElementLibrary from './Library/_elementLibrary';
-import { TagDefinition, AttributeDefinition } from './../FileParser/HTMLDocumentParser';
-import BaseAttributeCompletionFactory from './BaseAttributeCompletionFactory';
-import { GlobalAttributes } from './Library/_elementStructure';
+import {
+  CompletionItem,
+  CompletionItemKind,
+  InsertTextFormat, MarkedString } from 'vscode-languageserver';
 import AureliaSettings from './../AureliaSettings';
+import { AttributeDefinition, TagDefinition } from './../FileParser/HTMLDocumentParser';
+import BaseAttributeCompletionFactory from './BaseAttributeCompletionFactory';
+import ElementLibrary from './Library/_elementLibrary';
+import { GlobalAttributes } from './Library/ElementStructure/GlobalAttributes';
 
 @autoinject()
 export default class BindingCompletionFactory extends BaseAttributeCompletionFactory {
-  
+
   constructor(library: ElementLibrary, private settings: AureliaSettings) { super(library); }
 
-  public create(tagDef: TagDefinition, attributeDef: AttributeDefinition, nextChar: string): Array<CompletionItem> {
-    
-    let snippetPrefix = nextChar === '=' ? '' : `=${this.settings.quote}$0${this.settings.quote}`;
-    let result: Array<CompletionItem> = [];
-    
-    let element = this.getElement(tagDef.name);
+  public create(tagDef: TagDefinition, attributeDef: AttributeDefinition, nextChar: string): CompletionItem[] {
+
+    const snippetPrefix = nextChar === '=' ? '' : `=${this.settings.quote}$0${this.settings.quote}`;
+    const result: CompletionItem[] = [];
+
+    const element = this.getElement(tagDef.name);
     if (!element.events.get(attributeDef.name) && !GlobalAttributes.events.get(attributeDef.name)) {
       this.setAttributes(element.attributes, attributeDef.name, snippetPrefix, result);
     }
@@ -33,31 +33,31 @@ export default class BindingCompletionFactory extends BaseAttributeCompletionFac
       let event = events.get(name);
       if (!event) {
         event = GlobalAttributes.events.get(name);
-      }    
+      }
 
       if (event) {
         if (event.bubbles) {
-          for(let binding of ['delegate', 'capture']) {
+          for (const binding of ['delegate', 'capture']) {
             result.push({
               documentation: binding,
               insertText: binding + snippetPrefix,
               insertTextFormat: InsertTextFormat.Snippet,
               kind: CompletionItemKind.Property,
-              label: `.${binding}=${this.settings.quote}${this.settings.quote}`
+              label: `.${binding}=${this.settings.quote}${this.settings.quote}`,
             });
-          }                      
+          }
         }
 
-        for (let binding of ['trigger', 'call']) {
+        for (const binding of ['trigger', 'call']) {
           result.push({
             documentation: binding,
             insertText: binding + snippetPrefix,
             insertTextFormat: InsertTextFormat.Snippet,
             kind: CompletionItemKind.Property,
-            label: `.${binding}=${this.settings.quote}${this.settings.quote}`
+            label: `.${binding}=${this.settings.quote}${this.settings.quote}`,
           });
-        }        
-      }    
+        }
+      }
   }
 
   private setAttributes(attributes, name, snippetPrefix, result) {
@@ -66,14 +66,14 @@ export default class BindingCompletionFactory extends BaseAttributeCompletionFac
         attribute = GlobalAttributes.attributes.get(name);
       }
 
-      for(let binding of this.settings.bindings.data) {
+      for (const binding of this.settings.bindings.data) {
         result.push({
           documentation: binding.documentation,
           insertText: `${binding.name}${snippetPrefix}`,
           insertTextFormat: InsertTextFormat.Snippet,
           kind: CompletionItemKind.Property,
-          label: binding.label ? (binding.label as string).replace(/'/g, this.settings.quote) : `.${binding.name}=${this.settings.quote}${this.settings.quote}`
+          label: binding.label ? (binding.label as string).replace(/'/g, this.settings.quote) : `.${binding.name}=${this.settings.quote}${this.settings.quote}`,
         });
-      }   
+      }
   }
 }

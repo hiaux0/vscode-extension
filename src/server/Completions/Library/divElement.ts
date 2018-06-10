@@ -1,9 +1,9 @@
-import { MozDocElement } from './_elementStructure';
+import { MozDocElement } from './ElementStructure/MozDocElement';
 
 export default class DivElement extends MozDocElement {
 
-  public documentation = `The HTML <div> element is the generic container for flow content and does not inherently 
-  represent anything. Use it to group elements for purposes such as styling (using the class or id attributes), 
+  public documentation = `The HTML <div> element is the generic container for flow content and does not inherently
+  represent anything. Use it to group elements for purposes such as styling (using the class or id attributes),
   marking a section of a document in a different language (using the lang attribute), and so on.`;
 
   constructor() {

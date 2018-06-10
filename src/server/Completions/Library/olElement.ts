@@ -1,4 +1,6 @@
-import { BindableAttribute, Value, MozDocElement } from './_elementStructure';
+import { BindableAttribute } from './ElementStructure/BindableAttribute';
+import { MozDocElement } from './ElementStructure/MozDocElement';
+import { Value } from './ElementStructure/Value';
 
 export default class OlElement extends MozDocElement {
 
@@ -24,6 +26,6 @@ export default class OlElement extends MozDocElement {
           ['i', new Value(`indicates lowercase Roman numerals`)],
           ['I', new Value(`indicates uppercase Roman numerals`)],
           ['1', new Value(`indicates numbers (default)`)],
-      ])));                 
+      ])));
   }
 }

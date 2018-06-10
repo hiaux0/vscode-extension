@@ -1,8 +1,8 @@
-import { MozDocElement } from './_elementStructure';
+import { MozDocElement } from './ElementStructure/MozDocElement';
 
 export default class KdbElement extends MozDocElement {
 
-  public documentation = `The HTML <kbd> element represents user input and produces an inline element displayed in 
+  public documentation = `The HTML <kbd> element represents user input and produces an inline element displayed in
   the browser's default monospace font.`;
 
   constructor() {

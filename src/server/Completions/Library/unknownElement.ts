@@ -1,4 +1,4 @@
-import { BaseElement } from './_elementStructure';
+import { BaseElement } from './ElementStructure/BaseElement';
 
 export default class UnknownElement extends BaseElement {
 

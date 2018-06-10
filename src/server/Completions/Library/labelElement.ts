@@ -1,4 +1,5 @@
-import { BindableAttribute, MozDocElement } from './_elementStructure';
+import { BindableAttribute } from './ElementStructure/BindableAttribute';
+import { MozDocElement } from './ElementStructure/MozDocElement';
 
 export default class LabelElement extends MozDocElement {
 

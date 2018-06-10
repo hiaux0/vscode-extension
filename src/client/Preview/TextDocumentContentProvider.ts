@@ -1,16 +1,15 @@
 import * as vscode from 'vscode';
 import { LanguageClient } from 'vscode-languageclient';
-import { AuFile } from '../../server/FileParser/FileParser';
+import { AuFile } from '../../server/FileParser/AuFile';
 import { FileAccess } from '../../server/FileParser/FileAccess';
-  
 
 export class TextDocumentContentProvider implements vscode.TextDocumentContentProvider {
 
-  constructor(private client: LanguageClient) {
-    
-  }
+  private onDidChangeInteral = new vscode.EventEmitter<vscode.Uri>();
 
-  private _onDidChange = new vscode.EventEmitter<vscode.Uri>();
+  constructor(private client: LanguageClient) {
+
+  }
 
   public async provideTextDocumentContent(uri: vscode.Uri): Promise<string> {
 
@@ -19,23 +18,23 @@ export class TextDocumentContentProvider implements vscode.TextDocumentContentPr
     }
 
     const file = await this.client.sendRequest(
-      'aurelia-view-information', 
+      'aurelia-view-information',
       vscode.window.activeTextEditor.document.uri.toString());
 
     switch ((file as File).type) {
-      case "aurelia file":
+      case 'aurelia file':
         return this.displayAuFile(file as AuFile);
     }
 
-    return "<html>file: </html>";
+    return '<html>file: </html>';
   }
 
   get onDidChange(): vscode.Event<vscode.Uri> {
-    return this._onDidChange.event;
+    return this.onDidChangeInteral.event;
   }
 
   public update(uri: vscode.Uri) {
-    this._onDidChange.fire(uri);
+    this.onDidChangeInteral.fire(uri);
   }
 
   private displayAuFile(auFile: AuFile): string {

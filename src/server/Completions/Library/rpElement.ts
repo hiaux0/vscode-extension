@@ -1,8 +1,8 @@
-import { MozDocElement } from './_elementStructure';
+import { MozDocElement } from './ElementStructure/MozDocElement';
 
 export default class RpElement extends MozDocElement {
 
-  public documentation = `The HTML <rp> element is used to provide fall-back parentheses for browsers that do not support 
+  public documentation = `The HTML <rp> element is used to provide fall-back parentheses for browsers that do not support
   display of ruby annotations using the <ruby> element.`;
 
   constructor() {

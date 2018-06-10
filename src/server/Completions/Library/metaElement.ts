@@ -1,8 +1,10 @@
-import {  BindableAttribute, Value, MozDocElement } from './_elementStructure';
+import { BindableAttribute } from './ElementStructure/BindableAttribute';
+import { MozDocElement } from './ElementStructure/MozDocElement';
+import { Value } from './ElementStructure/Value';
 
 export default class MetaElement extends MozDocElement {
 
-  public documentation = `The HTML <meta> element represents any metadata information that cannot be 
+  public documentation = `The HTML <meta> element represents any metadata information that cannot be
   represented by one of the other HTML meta-related elements (<base>, <link>, <script>, <style> or <title>).`;
 
   constructor() {
@@ -43,7 +45,7 @@ the number of seconds until the page should be redirected to another, if the con
           ['publisher', new Value(`defining, in a free format, the name of the publisher of the document. Note that it can be the name of the institution;`)],
           ['robots', new Value(`defining the behavior that cooperative crawlers should have with the page.`)],
           ['slurp', new Value(`which is a synonym of robots, but is only followed by Slurp, the indexing crawler for Yahoo Search;`)],
-          ['viewport', new Value(`which gives hints about the size of the initial size of the viewport. This pragma is used by several mobile devices only.`)]
+          ['viewport', new Value(`which gives hints about the size of the initial size of the viewport. This pragma is used by several mobile devices only.`)],
       ])));
   }
 }

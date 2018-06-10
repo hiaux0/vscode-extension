@@ -1,8 +1,8 @@
-import { MozDocElement } from './_elementStructure';
+import { MozDocElement } from './ElementStructure/MozDocElement';
 
-export default class sectionElement extends MozDocElement {
+export default class SectionElement extends MozDocElement {
 
-  public documentation = `The HTML <section> element represents a standalone section of functionality contained 
+  public documentation = `The HTML <section> element represents a standalone section of functionality contained
   within an HTML document, typically with a heading, which doesn't have a more specific semantic element to represent it.`;
 
   constructor() {

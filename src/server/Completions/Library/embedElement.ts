@@ -1,8 +1,9 @@
-import { BindableAttribute, MozDocElement } from './_elementStructure';
+import { BindableAttribute } from './ElementStructure/BindableAttribute';
+import { MozDocElement } from './ElementStructure/MozDocElement';
 
 export default class EmbedElement extends MozDocElement {
 
-  public documentation = `The HTML <embed> element represents an integration point for an external application 
+  public documentation = `The HTML <embed> element represents an integration point for an external application
   or interactive content (in other words, a plug-in).`;
 
   constructor() {
@@ -11,7 +12,6 @@ export default class EmbedElement extends MozDocElement {
     this.emptyElement = true;
     this.ariaRoles.push(...['application', 'document', 'img', 'presentation']);
 
-
     this.attributes.set('height',
       new BindableAttribute(`The displayed height of the resource, in CSS pixels.`));
     this.attributes.set('src',
@@ -19,6 +19,6 @@ export default class EmbedElement extends MozDocElement {
     this.attributes.set('type',
       new BindableAttribute(`The MIME type to use to select the plug-in to instantiate.`));
     this.attributes.set('width',
-      new BindableAttribute(`The displayed width of the resource, in CSS pixels.`));            
+      new BindableAttribute(`The displayed width of the resource, in CSS pixels.`));
   }
 }

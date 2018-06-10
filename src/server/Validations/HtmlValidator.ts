@@ -1,12 +1,12 @@
-import { Diagnostic, DiagnosticSeverity, Range, TextDocument } from 'vscode-languageserver';
-import { HTMLDocumentParser, AttributeDefinition, TagDefinition } from './../FileParser/HTMLDocumentParser';
 import { autoinject } from 'aurelia-dependency-injection';
+import { Diagnostic, DiagnosticSeverity, Range, TextDocument } from 'vscode-languageserver';
+import { AttributeDefinition, HTMLDocumentParser, TagDefinition } from './../FileParser/HTMLDocumentParser';
 
-import { OneWayDeprecatedValidation } from './Attribute/OneWayDeprecatedValidation';
-import { InValidAttributeCasingValidation } from './Attribute/InValidAttributeCasingValidation';
 import AureliaSettings from '../AureliaSettings';
 import { getLanguageService } from '../FileParser/AureliaLanguageServiceHost';
 import { fileUriToPath } from '../Util/FileUriToPath';
+import { InValidAttributeCasingValidation } from './Attribute/InValidAttributeCasingValidation';
+import { OneWayDeprecatedValidation } from './Attribute/OneWayDeprecatedValidation';
 
 @autoinject()
 export class HtmlValidator {
@@ -21,7 +21,7 @@ export class HtmlValidator {
 
     this.attributeValidators.push(
       oneWayDeprecatedValidation,
-      inValidAttributeCasingValidation
+      inValidAttributeCasingValidation,
     );
   }
 
@@ -32,24 +32,22 @@ export class HtmlValidator {
     }
 
     const text = document.getText();
-    if (text.trim().length == 0) {
+    if (text.trim().length === 0) {
       return Promise.resolve([]);
     }
 
     const parser = new HTMLDocumentParser();
     const documentNodes = await parser.parse(text);
-  
+
     const diagnostics: Diagnostic[] = [];
     for (const element of documentNodes) {
       for (const attribute of element.attributes) {
         this.attributeValidators
-          .filter(validator => validator.match(attribute, element, document))
-          .forEach(validator => diagnostics.push(validator.diagnostic(attribute, element, document)))
+          .filter((validator) => validator.match(attribute, element, document))
+          .forEach((validator) => diagnostics.push(validator.diagnostic(attribute, element, document)));
       }
-    }    
+    }
 
     return Promise.resolve(diagnostics);
-  }  
+  }
 }
-
-

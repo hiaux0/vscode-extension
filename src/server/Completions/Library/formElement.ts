@@ -1,4 +1,7 @@
-import { BindableAttribute, Value, MozDocElement, Event } from './_elementStructure';
+import { BindableAttribute } from './ElementStructure/BindableAttribute';
+import { Event } from './ElementStructure/Event';
+import { MozDocElement } from './ElementStructure/MozDocElement';
+import { Value } from './ElementStructure/Value';
 
 export default class FormElement extends MozDocElement {
 
@@ -7,7 +10,7 @@ export default class FormElement extends MozDocElement {
   constructor() {
     super();
     this.url = 'https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form';
-    this.ariaRoles.push(...['group','presentation']);
+    this.ariaRoles.push(...['group', 'presentation']);
 
     this.attributes.set('accept-charset',
       new BindableAttribute(`A space- or comma-delimited list of character encodings that the server accepts. The browser uses them in the order in which they are listed. The default value, the reserved string "UNKNOWN", indicates the same encoding as that of the document containing the form element.
@@ -34,7 +37,7 @@ In previous versions of HTML, the different character encodings could be delimit
         ['application/x-www-form-urlencoded', new Value(`The default value if the attribute is not specified.`)],
         ['multipart/form-data', new Value(`The value used for an <input> element with the type attribute set to "file".`)],
         ['text/plain', new Value(`HTML5`)],
-      ]))); 
+      ])));
     this.attributes.set('method',
       new BindableAttribute(`The HTTP method that the browser uses to submit the form.`,
       null,
@@ -44,11 +47,11 @@ In previous versions of HTML, the different character encodings could be delimit
       new Map([
         ['post', new Value(`Corresponds to the HTTP POST method; form data are included in the body of the form and sent to the server.`)],
         ['get', new Value(`Corresponds to the HTTP GET method; form data are appended to the action attribute URI with a '?' as separator, and the resulting URI is sent to the server. Use this method when the form has no side-effects and contains only ASCII characters.`)],
-      ])));            
+      ])));
     this.attributes.set('name',
       new BindableAttribute(`The name of the form. In HTML 4, its use is deprecated (id should be used instead). It must be unique among the forms in a document and not just an empty string in HTML 5.`));
     this.attributes.set('novalidate',
-      new BindableAttribute(`This Boolean attribute indicates that the form is not to be validated when submitted. If this attribute is not specified (and therefore the form is validated), this default setting can be overridden by a formnovalidate attribute on a <button> or <input> element belonging to the form.`));                  
+      new BindableAttribute(`This Boolean attribute indicates that the form is not to be validated when submitted. If this attribute is not specified (and therefore the form is validated), this default setting can be overridden by a formnovalidate attribute on a <button> or <input> element belonging to the form.`));
     this.attributes.set('target',
       new BindableAttribute(`A name or keyword indicating where to display the response that is received after submitting the form. In HTML 4, this is the name/keyword for a frame. In HTML5, it is a name/keyword for a browsing context (for example, tab, window, or inline frame).`,
       null,
@@ -59,10 +62,10 @@ In previous versions of HTML, the different character encodings could be delimit
         ['_self', new Value(`Load the response into the same HTML 4 frame (or HTML5 browsing context) as the current one. This value is the default if the attribute is not specified.`)],
         ['_blank', new Value(`Load the response into a new unnamed HTML 4 window or HTML5 browsing context.`)],
         ['_parent', new Value(`Load the response into the HTML 4 frameset parent of the current frame, or HTML5 parent browsing context of the current one. If there is no parent, this option behaves the same way as _self.`)],
-        ['_top', new Value(`Load the response into the top-level browsing context (i.e., the browsing context that is an ancestor of the current one, and has no parent). If there is no parent, this option behaves the same way as _self.`)]
+        ['_top', new Value(`Load the response into the top-level browsing context (i.e., the browsing context that is an ancestor of the current one, and has no parent). If there is no parent, this option behaves the same way as _self.`)],
       ])));
 
-      this.events.set('submit', new Event(
+    this.events.set('submit', new Event(
         `The submit event is fired when a form is submitted.`,
         `https://developer.mozilla.org/en-US/docs/Web/Events/submit`, false, false));
   }

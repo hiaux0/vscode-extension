@@ -1,8 +1,8 @@
-import { MozDocElement } from './_elementStructure';
+import { MozDocElement } from './ElementStructure/MozDocElement';
 
 export default class EmElement extends MozDocElement {
 
-  public documentation = `The HTML <em> element marks text that has stress emphasis. The <em> element 
+  public documentation = `The HTML <em> element marks text that has stress emphasis. The <em> element
   can be nested, with each level of nesting indicating a greater degree of emphasis.`;
 
   constructor() {

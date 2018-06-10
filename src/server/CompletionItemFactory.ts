@@ -1,11 +1,11 @@
 import { autoinject } from 'aurelia-dependency-injection';
 import { CompletionItem, Position } from 'vscode-languageserver';
 import AttributeCompletionFactory from './Completions/AttributeCompletionFactory';
-import ElementCompletionFactory from './Completions/ElementCompletionFactory';
 import AttributeValueCompletionFactory from './Completions/AttributeValueCompletionFactory';
 import BindingCompletionFactory from './Completions/BindingCompletionFactory';
+import ElementCompletionFactory from './Completions/ElementCompletionFactory';
 import EmmetCompletionFactory from './Completions/EmmetCompletionFactory';
-import { HTMLDocumentParser, TagDefinition, AttributeDefinition } from './FileParser/HTMLDocumentParser';
+import { AttributeDefinition, HTMLDocumentParser, TagDefinition } from './FileParser/HTMLDocumentParser';
 
 @autoinject()
 export default class CompletionItemFactory {
@@ -20,18 +20,18 @@ export default class CompletionItemFactory {
 
   public async create(
     triggerCharacter: string,
-    position: Position,    
+    position: Position,
     text: string,
     positionNumber: number,
-    uri: string): Promise<Array<CompletionItem>> {
+    uri: string): Promise<CompletionItem[]> {
 
-      let nodes = await this.parser.parse(text);     
+      const nodes = await this.parser.parse(text);
       let insideTag: TagDefinition = null;
       let lastIdx = 0;
 
       // get insidetag and last index of tag
-      for(let i = 0; i < nodes.length; i++) {
-        let node = nodes[i];
+      for (let i = 0; i < nodes.length; i++) {
+        const node = nodes[i];
         if (!insideTag && positionNumber >= node.startOffset && positionNumber <= node.endOffset) {
           insideTag = node;
         }
@@ -42,23 +42,23 @@ export default class CompletionItemFactory {
       }
 
       // get open parent tag
-      let tags = this.getOpenHtmlTags(nodes, lastIdx);
-      let parentTag = tags[tags.length - 1];
+      const tags = this.getOpenHtmlTags(nodes, lastIdx);
+      const parentTag = tags[tags.length - 1];
 
       // auto complete inside a tag
       if (insideTag) {
 
-        let elementString = text.substring(insideTag.startOffset, positionNumber);
+        const elementString = text.substring(insideTag.startOffset, positionNumber);
         if (this.notInAttributeValue(elementString)) {
 
           if (triggerCharacter === ' ') {
-            return this.attributeCompletionFactory.create(insideTag.name, insideTag.attributes.map(i => i.name));
+            return this.attributeCompletionFactory.create(insideTag.name, insideTag.attributes.map((i) => i.name));
           } else if (triggerCharacter === '.' && this.canExpandDot(elementString)) {
             return this.createBindingCompletion(insideTag, text, positionNumber);
           } else {
             return [];
-          } 
-        
+          }
+
         // inside attribute, perform attribute completion
         } else if (triggerCharacter === '"' || triggerCharacter === '\'' || triggerCharacter === '.') {
                 return this.createValueCompletion(insideTag, text, positionNumber, uri);
@@ -77,44 +77,46 @@ export default class CompletionItemFactory {
   }
 
   private notInAttributeValue(tagText: string) {
-    let single = 0, double = 0;
-    for(let char of tagText) {
-      if (char === '"') double += 1;
-      if (char === '\'') single += 1;
-    }   
-    return single % 2 == 0 && double % 2 == 0;
+    let single = 0;
+    let double = 0;
+    for (const char of tagText) {
+      if (char === '"') { double += 1; }
+      if (char === '\'') { single += 1; }
+    }
+    return single % 2 === 0 && double % 2 === 0;
   }
 
   private canExpandDot(elementString) {
-    return !/([^a-zA-Z]|\.(bind|one-way|two-way|one-time|from-view|to-view|delegate|trigger|call|capture|ref))\.$/g.test(elementString);    
+    return !/([^a-zA-Z]|\.(bind|one-way|two-way|one-time|from-view|to-view|delegate|trigger|call|capture|ref))\.$/g.test(elementString);
   }
 
-  private getOpenHtmlTags(nodes: Array<TagDefinition>, lastIdx: number) {
-    let tags: Array<string> = [];
-    for(let i = 0; i < lastIdx; i++) {
+  private getOpenHtmlTags(nodes: TagDefinition[], lastIdx: number) {
+    const tags: string[] = [];
+    for (let i = 0; i < lastIdx; i++) {
       if (nodes[i].startTag) {
         tags.push(nodes[i].name);
       } else {
-        var index = tags.indexOf(nodes[i].name);
+        const index = tags.indexOf(nodes[i].name);
         if (index >= 0) {
           tags.splice( index, 1 );
-        }          
+        }
       }
     }
     return tags;
   }
 
   private createValueCompletion(tag: TagDefinition, text: string, position: number, uri: string) {
-    let nextCharacter = text.substring(position, position + 1);
+    const nextCharacter = text.substring(position, position + 1);
     if (/['"]/.test(nextCharacter)) {
       let attribute;
-      let elementText = text.substring(tag.startOffset, tag.endOffset);
-      let tagPosition = position - tag.startOffset;
+      const elementText = text.substring(tag.startOffset, tag.endOffset);
+      const tagPosition = position - tag.startOffset;
       const attributeRegex = /([\w-]+)\.?\w*\=['"]/g;
       let matches;
+      // tslint:disable-next-line:no-conditional-assignment
       while (matches = attributeRegex.exec(elementText)) {
-          let foundText = matches[1];
-          let attributes = tag.attributes.filter(a => a && a.name == foundText);
+          const foundText = matches[1];
+          const attributes = tag.attributes.filter((a) => a && a.name === foundText);
           if (attributes.length) {
             attribute = attributes[0];
             break;
@@ -129,33 +131,34 @@ export default class CompletionItemFactory {
 
   private createEmmetCompletion(text: string, position: number) {
     const emmetRegex = /^([^<]*?>)*?([\w|-]*)\[$/gm;
-    let matches = emmetRegex.exec(text.substring(0, position));
+    const matches = emmetRegex.exec(text.substring(0, position));
     if (!matches) {
       return [];
     }
-    let elementName = matches[2];
+    const elementName = matches[2];
     return this.emmetCompletionFactory.create(elementName);
   }
 
   private createBindingCompletion(tag: TagDefinition, text: string, position: number) {
     let attribute;
-    let elementText = text.substring(tag.startOffset, tag.endOffset);
-    let tagPosition = position - tag.startOffset;
+    const elementText = text.substring(tag.startOffset, tag.endOffset);
+    const tagPosition = position - tag.startOffset;
     const attributeRegex = /([\w\.-]+)(\=['"](.*?)["'])?/g;
     let matches;
     let foundText = '';
+    // tslint:disable-next-line:no-conditional-assignment
     while (matches = attributeRegex.exec(elementText)) {
       if (tagPosition >= matches.index && (tagPosition <= matches.index + matches[1].length)) {
         foundText = matches[1];
-        let attributes = tag.attributes.filter(a => a.name + (a.binding !== undefined ? '.' : '') == foundText);
+        const attributes = tag.attributes.filter((a) => a.name + (a.binding !== undefined ? '.' : '') === foundText);
         if (attributes.length) {
           attribute = attributes[0];
           break;
         }
-      }  
+      }
     }
     if (!attribute) {
-      attribute = new AttributeDefinition(foundText.substring(0, foundText.length-1), '');
+      attribute = new AttributeDefinition(foundText.substring(0, foundText.length - 1), '');
     }
     return this.bindingCompletionFactory.create(tag, attribute, text.substring(position, position + 1));
   }

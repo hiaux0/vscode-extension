@@ -1,8 +1,8 @@
-import { MozDocElement } from './_elementStructure';
+import { MozDocElement } from './ElementStructure/MozDocElement';
 
 export default class RtcElement extends MozDocElement {
 
-  public documentation = `The HTML <rtc> element embraces semantic annotations of characters presented in a ruby of <rb> 
+  public documentation = `The HTML <rtc> element embraces semantic annotations of characters presented in a ruby of <rb>
   elements used inside of <ruby> element. <rb> elements can have both pronunciation (<rt>) and semantic (<rtc>) annotations.`;
 
   constructor() {

@@ -1,11 +1,7 @@
-import {WebComponent} from './WebComponent';
 import {singleton} from 'aurelia-dependency-injection';
+import {WebComponent} from './WebComponent';
 
 @singleton()
 export class AureliaApplication {
-
-  constructor() {
-  }
-
-  public components: Array<WebComponent> = [];
+  public components: WebComponent[] = [];
 }

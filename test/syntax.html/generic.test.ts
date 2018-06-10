@@ -6,13 +6,13 @@ describe('The Aurelia HTML syntax', () => {
   it('must tokenize element with dash with scope "entity.name.tag.other.html"', () => {
 
     // arrange
-    let scope = 'entity.name.tag.other.html';
+    const scope = 'entity.name.tag.other.html';
 
     // act
-    let lineToken = tokenizeLine('<any-element>');
+    const lineToken = tokenizeLine('<any-element>');
 
     // assert
-    let token = getTokenOnCharRange(lineToken, 1, 12);
+    const token = getTokenOnCharRange(lineToken, 1, 12);
     assert.isOk(hasScope(token.scopes, scope));
 
   });
@@ -20,13 +20,13 @@ describe('The Aurelia HTML syntax', () => {
   it('must tokenize closing element with dash with scope "entity.name.tag.other.html"', () => {
 
     // arrange
-    let scope = 'entity.name.tag.other.html';
+    const scope = 'entity.name.tag.other.html';
 
     // act
-    let lineToken = tokenizeLine('</any-element>');
+    const lineToken = tokenizeLine('</any-element>');
 
     // assert
-    let token = getTokenOnCharRange(lineToken, 2, 13);
+    const token = getTokenOnCharRange(lineToken, 2, 13);
     assert.isOk(hasScope(token.scopes, scope));
 
   });
@@ -34,13 +34,13 @@ describe('The Aurelia HTML syntax', () => {
   it('must tokenize element with scope "entity.name.tag.other.html"', () => {
 
     // arrange
-    let scope = 'entity.name.tag.other.html';
+    const scope = 'entity.name.tag.other.html';
 
     // act
-    let lineToken = tokenizeLine('<anyelement>');
+    const lineToken = tokenizeLine('<anyelement>');
 
     // assert
-    let token = getTokenOnCharRange(lineToken, 1, 11);
+    const token = getTokenOnCharRange(lineToken, 1, 11);
     assert.isOk(hasScope(token.scopes, scope));
 
   });
@@ -48,13 +48,13 @@ describe('The Aurelia HTML syntax', () => {
   it('must tokenize closing element with scope "entity.name.tag.other.html"', () => {
 
     // arrange
-    let scope = 'entity.name.tag.other.html';
+    const scope = 'entity.name.tag.other.html';
 
     // act
-    let lineToken = tokenizeLine('</anyelement>');
+    const lineToken = tokenizeLine('</anyelement>');
 
     // assert
-    let token = getTokenOnCharRange(lineToken, 2, 12);
+    const token = getTokenOnCharRange(lineToken, 2, 12);
     assert.isOk(hasScope(token.scopes, scope));
 
   });
@@ -62,13 +62,13 @@ describe('The Aurelia HTML syntax', () => {
   it('must tokenize inline element with dash as scope "entity.name.tag.other.html"', () => {
 
     // arrange
-    let scope = 'entity.name.tag.other.html';
+    const scope = 'entity.name.tag.other.html';
 
     // act
-    let lineToken = tokenizeLine('<input-type>');
+    const lineToken = tokenizeLine('<input-type>');
 
     // assert
-    let token = getTokenOnCharRange(lineToken, 1, 11);
+    const token = getTokenOnCharRange(lineToken, 1, 11);
     assert.isOk(hasScope(token.scopes, scope));
 
   });
@@ -76,13 +76,13 @@ describe('The Aurelia HTML syntax', () => {
   it('must tokenize block element with dash as scope "entity.name.tag.other.html"', () => {
 
     // arrange
-    let scope = 'entity.name.tag.other.html';
+    const scope = 'entity.name.tag.other.html';
 
     // act
-    let lineToken = tokenizeLine('<aside-type>');
+    const lineToken = tokenizeLine('<aside-type>');
 
     // assert
-    let token = getTokenOnCharRange(lineToken, 1, 11);
+    const token = getTokenOnCharRange(lineToken, 1, 11);
     assert.isOk(hasScope(token.scopes, scope));
 
   });

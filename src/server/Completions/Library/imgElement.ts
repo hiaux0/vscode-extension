@@ -1,4 +1,6 @@
-import { BindableAttribute, Value, MozDocElement } from './_elementStructure';
+import { BindableAttribute } from './ElementStructure/BindableAttribute';
+import { MozDocElement } from './ElementStructure/MozDocElement';
+import { Value } from './ElementStructure/Value';
 
 export default class ImgElement extends MozDocElement {
 
@@ -33,8 +35,8 @@ export default class ImgElement extends MozDocElement {
     this.attributes.set('srcset',
       new BindableAttribute(`A list of one or more strings separated by commas indicating a set of possible image sources for the user agent to use.`));
     this.attributes.set('width',
-      new BindableAttribute(`The intrinsic width of the image in pixels. In HTML 4, either a percentage or pixels were acceptable values. In HTML5, however, only pixels are acceptable.`));                                          
+      new BindableAttribute(`The intrinsic width of the image in pixels. In HTML 4, either a percentage or pixels were acceptable values. In HTML5, however, only pixels are acceptable.`));
     this.attributes.set('usemap',
-      new BindableAttribute(`The partial URL (starting with '#') of an image map associated with the element.`)); 
+      new BindableAttribute(`The partial URL (starting with '#') of an image map associated with the element.`));
   }
 }

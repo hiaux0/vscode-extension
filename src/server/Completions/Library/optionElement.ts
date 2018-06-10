@@ -1,8 +1,9 @@
-import { BindableAttribute, MozDocElement } from './_elementStructure';
+import { BindableAttribute } from './ElementStructure/BindableAttribute';
+import { MozDocElement } from './ElementStructure/MozDocElement';
 
-export default class optionElement extends MozDocElement {
+export default class OptionElement extends MozDocElement {
 
-  public documentation = `The HTML <option> element is used to create a control representing an item within a <select>, 
+  public documentation = `The HTML <option> element is used to create a control representing an item within a <select>,
   an <optgroup> or a <datalist> HTML5 element.`;
 
   constructor() {

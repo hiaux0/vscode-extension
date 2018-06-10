@@ -1,8 +1,8 @@
-import { MozDocElement } from './_elementStructure';
+import { MozDocElement } from './ElementStructure/MozDocElement';
 
 export default class TrElement extends MozDocElement {
 
-  public documentation = `The HTML <tr> element defines a row of cells in a table. Those can be a mix of <td> and 
+  public documentation = `The HTML <tr> element defines a row of cells in a table. Those can be a mix of <td> and
   <th> elements.`;
 
   constructor() {

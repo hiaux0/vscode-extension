@@ -1,8 +1,9 @@
-import { BindableAttribute, MozDocElement } from './_elementStructure';
+import { BindableAttribute } from './ElementStructure/BindableAttribute';
+import { MozDocElement } from './ElementStructure/MozDocElement';
 
 export default class ObjectElement extends MozDocElement {
 
-  public documentation = `The HTML <object> element represents an external resource, which can be treated as an image, 
+  public documentation = `The HTML <object> element represents an external resource, which can be treated as an image,
   a nested browsing context, or a resource to be handled by a plugin`;
 
   constructor() {
@@ -25,6 +26,5 @@ export default class ObjectElement extends MozDocElement {
       new BindableAttribute(`A hash-name reference to a <map> element; that is a '#' followed by the value of a name of a map element.`));
     this.attributes.set('width',
       new BindableAttribute(`The width of the display resource, in CSS pixels.`));
-
   }
 }

@@ -1,8 +1,8 @@
-import { MozDocElement } from './_elementStructure';
+import { MozDocElement } from './ElementStructure/MozDocElement';
 
 export default class RubyElement extends MozDocElement {
 
-  public documentation = `The HTML <ruby> element represents a ruby annotation. Ruby annotations are for 
+  public documentation = `The HTML <ruby> element represents a ruby annotation. Ruby annotations are for
   showing pronunciation of East Asian characters.`;
 
   constructor() {

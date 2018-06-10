@@ -1,23 +1,23 @@
-import { 
-  CompletionItem, 
-  CompletionItemKind, 
-  InsertTextFormat, 
-  MarkedString } from 'vscode-languageserver';
 import { autoinject } from 'aurelia-dependency-injection';
-import ElementLibrary from './Library/_elementLibrary';
-import { GlobalAttributes } from './Library/_elementStructure';
-import BaseAttributeCompletionFactory from './BaseAttributeCompletionFactory';
+import {
+  CompletionItem,
+  CompletionItemKind,
+  InsertTextFormat,
+  MarkedString } from 'vscode-languageserver';
 import AureliaSettings from './../AureliaSettings';
+import BaseAttributeCompletionFactory from './BaseAttributeCompletionFactory';
+import ElementLibrary from './Library/_elementLibrary';
+import { GlobalAttributes } from './Library/ElementStructure/GlobalAttributes';
 
 @autoinject()
 export default class AureliaAttributeCompletionFactory extends BaseAttributeCompletionFactory {
 
   constructor(library: ElementLibrary, private settings: AureliaSettings) { super(library); }
 
-  public create(elementName: string, existingAttributes: Array<string>): Array<CompletionItem> {
+  public create(elementName: string, existingAttributes: string[]): CompletionItem[] {
 
-    let result:Array<CompletionItem> = [];   
-    let element = this.getElement(elementName);
+    const result: CompletionItem[] = [];
+    const element = this.getElement(elementName);
 
     if (element.hasGlobalAttributes) {
       this.addAttributes(GlobalAttributes.attributes, result, existingAttributes, this.settings.quote);
@@ -30,7 +30,7 @@ export default class AureliaAttributeCompletionFactory extends BaseAttributeComp
     if (element.hasGlobalEvents) {
       this.addEvents(GlobalAttributes.events, result, existingAttributes, this.settings.quote);
     }
-    
+
     if (element.events) {
       this.addEvents(element.events, result, existingAttributes, this.settings.quote);
     }

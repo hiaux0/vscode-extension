@@ -1,4 +1,4 @@
-import { MozDocElement } from './_elementStructure';
+import { MozDocElement } from './ElementStructure/MozDocElement';
 
 export default class TBodyElement extends MozDocElement {
 

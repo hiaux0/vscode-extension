@@ -1,29 +1,29 @@
 import 'reflect-metadata';
-import { createConnection, 
-  IConnection, 
-  TextDocuments, 
-  InitializeParams, 
-  InitializeResult, 
-  Hover, 
-  CompletionList,
-  InitializedParams } from 'vscode-languageserver';
+import { CompletionList,
+  createConnection,
+  Hover,
+  IConnection,
+  InitializedParams,
+  InitializeParams,
+  InitializeResult,
+  TextDocuments } from 'vscode-languageserver';
 import { MarkedString } from 'vscode-languageserver';
 
 import { Container } from 'aurelia-dependency-injection';
+import AureliaSettings from './AureliaSettings';
 import CompletionItemFactory from './CompletionItemFactory';
 import ElementLibrary from './Completions/Library/_elementLibrary';
-import AureliaSettings from './AureliaSettings';
 
-import { HtmlValidator } from './Validations/HtmlValidator';
 import { HtmlInvalidCaseCodeAction } from './CodeActions/HtmlInvalidCaseCodeAction';
 import { OneWayBindingDeprecatedCodeAction } from './CodeActions/OneWayBindingDeprecatedCodeAction';
+import { HtmlValidator } from './Validations/HtmlValidator';
 
+import { connect } from 'net';
 import * as ts from 'typescript';
+import { FileAccess } from './FileParser/FileAccess';
+import FileParser from './FileParser/FileParser';
 import { AureliaApplication } from './FileParser/Model/AureliaApplication';
 import { normalizePath } from './Util/NormalizePath';
-import { connect } from 'net';
-import FileParser from './FileParser/FileParser';
-import { FileAccess } from './FileParser/FileAccess';
 import { Workspace } from './Workspace';
 
 // Bind console.log & error to the Aurelia output
@@ -43,25 +43,24 @@ const workspace = globalContainer.get(Workspace) as Workspace;
 
 // Register characters to lisen for
 connection.onInitialize(async (params: InitializeParams): Promise<InitializeResult> => {
-  
+
   workspace.path = params.rootPath;
 
   // TODO: find better way/place to init this
   const dummy = globalContainer.get(ElementLibrary);
-  
+
   return {
     capabilities: {
-      completionProvider: { resolveProvider: false, triggerCharacters: ['<', ' ', '.', '[', '"', '\''] },
       codeActionProvider: true,
+      completionProvider: { resolveProvider: false, triggerCharacters: ['<', ' ', '.', '[', '"', '\''] },
       textDocumentSync: documents.syncKind,
     },
   };
 });
 
-
 const fileParser = new FileParser();
 
-documents.onDidChangeContent(async change => {
+documents.onDidChangeContent(async (change) => {
   workspace.files.set(change.document.uri, await fileParser.parse(change.document.uri, change.document.getText()));
 });
 
@@ -76,14 +75,14 @@ connection.onRequest('aurelia-view-information', async (uri: string) => {
 
 const codeActions = [
   new HtmlInvalidCaseCodeAction(),
-  new OneWayBindingDeprecatedCodeAction()
+  new OneWayBindingDeprecatedCodeAction(),
 ];
-connection.onCodeAction(async codeActionParams => {
+connection.onCodeAction(async (codeActionParams) => {
   const diagnostics = codeActionParams.context.diagnostics;
   const document = documents.get(codeActionParams.textDocument.uri);
-  const commands = []; 
+  const commands = [];
   for (const diagnostic of diagnostics) {
-    const action = codeActions.find(i => i.name == diagnostic.code);
+    const action = codeActions.find((i) => i.name === diagnostic.code);
     if (action) {
       commands.push(await action.commands(diagnostic, document));
     }
@@ -92,39 +91,38 @@ connection.onCodeAction(async codeActionParams => {
 });
 
 // Register and get changes to Aurelia settings
-connection.onDidChangeConfiguration((change) => { 
+connection.onDidChangeConfiguration((change) => {
   settings.quote = change.settings.aurelia.autocomplete.quotes === 'single' ? '\'' : '"';
   settings.validation = change.settings.aurelia.validation;
   settings.bindings.data = change.settings.aurelia.autocomplete.bindings.data;
   settings.featureToggles = change.settings.aurelia.featureToggles;
 
-  //await featureToggles(settings.featureToggles);
+  // await featureToggles(settings.featureToggles);
 });
 
 // Setup Validation
 const validator = globalContainer.get(HtmlValidator) as HtmlValidator;
-documents.onDidChangeContent(async change => {
+documents.onDidChangeContent(async (change) => {
   const diagnostics = await validator.doValidation(change.document);
   connection.sendDiagnostics({ uri: change.document.uri, diagnostics });
 });
 
 // Lisen for completion requests
 connection.onCompletion(async (textDocumentPosition) => {
-  let document = documents.get(textDocumentPosition.textDocument.uri);
-  let text = document.getText();
-  let offset = document.offsetAt(textDocumentPosition.position);
-  let triggerCharacter = text.substring(offset - 1, offset);
-  let position = textDocumentPosition.position;
-  return CompletionList.create(await completionItemFactory.create(triggerCharacter, position, text, offset, textDocumentPosition.textDocument.uri), false);
+  const document = documents.get(textDocumentPosition.textDocument.uri);
+  const text = document.getText();
+  const offset = document.offsetAt(textDocumentPosition.position);
+  const triggerCharacter = text.substring(offset - 1, offset);
+  const position = textDocumentPosition.position;
+  return CompletionList.create(
+    await completionItemFactory.create(triggerCharacter, position, text, offset, textDocumentPosition.textDocument.uri), false);
 });
 
-
 connection.onRequest('aurelia-view-information', (filePath: string) => {
-  return aureliaApplication.components.find(doc => doc.paths.indexOf(normalizePath(filePath)) > -1);
+  return aureliaApplication.components.find((doc) => doc.paths.indexOf(normalizePath(filePath)) > -1);
 });
 
 connection.listen();
-
 
 // async function featureToggles(featureToggles) {
 //   if (settings.featureToggles.smartAutocomplete) {

@@ -1,4 +1,6 @@
-import { BindableAttribute, Value, MozDocElement } from './_elementStructure';
+import { BindableAttribute } from './ElementStructure/BindableAttribute';
+import { MozDocElement } from './ElementStructure/MozDocElement';
+import { Value } from './ElementStructure/Value';
 
 export default class HtmlBaseElement extends MozDocElement {
 
@@ -9,7 +11,7 @@ export default class HtmlBaseElement extends MozDocElement {
     this.url = 'https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base';
     this.areaRolesAllowed = false;
     this.emptyElement = true;
-    this.permittedParents.push("head");
+    this.permittedParents.push('head');
 
     this.attributes.set('href',
       new BindableAttribute(`The base URL to be used throughout the document for relative URL addresses. If this attribute is specified, this element must come before any other elements with attributes whose values are URLs. Absolute and relative URLs are allowed.`));

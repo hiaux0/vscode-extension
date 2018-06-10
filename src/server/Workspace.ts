@@ -1,4 +1,4 @@
-import { ParsedFile } from "./FileParser/FileParser";
+import { ParsedFile } from './FileParser/ParsedFile';
 
 export class Workspace {
     public path: string;

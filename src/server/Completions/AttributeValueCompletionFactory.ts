@@ -1,37 +1,37 @@
-import { 
-  CompletionItem, 
-  CompletionItemKind, 
-  InsertTextFormat } from 'vscode-languageserver';
 import { autoinject } from 'aurelia-dependency-injection';
-import ElementLibrary from './Library/_elementLibrary';
-import { GlobalAttributes } from './Library/_elementStructure';
-import BaseAttributeCompletionFactory from './BaseAttributeCompletionFactory';
-import {AureliaApplication} from './../FileParser/Model/AureliaApplication';
+import { defaultCipherList } from 'constants';
+import { StringLiteralType, SyntaxKind } from 'typescript';
+import {
+  CompletionItem,
+  CompletionItemKind,
+  InsertTextFormat } from 'vscode-languageserver';
 import AureliaSettings from '../AureliaSettings';
-import { settings } from 'cluster';
+import { AuFile } from '../FileParser/AuFile';
+import { getLanguageService } from '../FileParser/AureliaLanguageServiceHost';
+import { HtmlFile } from '../FileParser/HtmlFile';
+import { Workspace } from '../Workspace';
+import {AureliaApplication} from './../FileParser/Model/AureliaApplication';
 import { fileUriToPath } from './../Util/FileUriToPath';
 import { normalizePath } from './../Util/NormalizePath';
-import { getLanguageService } from '../FileParser/AureliaLanguageServiceHost';
-import { Workspace } from '../Workspace';
-import { defaultCipherList } from 'constants';
-import { AuFile, HtmlFile } from '../FileParser/FileParser';
-import { StringLiteralType, SyntaxKind } from 'typescript';
+import BaseAttributeCompletionFactory from './BaseAttributeCompletionFactory';
+import ElementLibrary from './Library/_elementLibrary';
+import { GlobalAttributes } from './Library/ElementStructure/GlobalAttributes';
 
 @autoinject()
 export default class AttributeCompletionFactory extends BaseAttributeCompletionFactory {
 
   constructor(
-    library: ElementLibrary, 
+    library: ElementLibrary,
     private application: AureliaApplication,
     private settings: AureliaSettings,
     private workSpace: Workspace) { super(library); }
 
-  public create(elementName: string, attributeName: string, bindingName: string, uri: string, position: number, value: string): Array<CompletionItem> {
+  public create(elementName: string, attributeName: string, bindingName: string, uri: string, position: number, value: string): CompletionItem[] {
 
-    let result:Array<CompletionItem> = [];
-    
+    const result: CompletionItem[] = [];
+
     if (bindingName === undefined || bindingName === null || bindingName === '') {
-      let element = this.getElement(elementName);
+      const element = this.getElement(elementName);
 
       let attribute = element.attributes.get(attributeName);
       if (!attribute) {
@@ -39,9 +39,9 @@ export default class AttributeCompletionFactory extends BaseAttributeCompletionF
       }
 
       if (attribute && attribute.values) {
-        for (let [key, value] of attribute.values.entries()) {
+        for (const [key, val] of attribute.values.entries()) {
           result.push({
-              documentation: value.documentation,
+              documentation: val.documentation,
               insertText: key,
               insertTextFormat: InsertTextFormat.Snippet,
               kind: CompletionItemKind.Property,
@@ -52,39 +52,39 @@ export default class AttributeCompletionFactory extends BaseAttributeCompletionF
     }
 
     if (this.settings.featureToggles.smartAutocomplete) {
-      
+
       const file = this.workSpace.files.get(uri);
-      let position = 0;
+      let pos = 0;
       if (file instanceof AuFile) {
-        console.log('au file');
+        // console.log('au file');
         const auFile = file as AuFile;
         const fileLength = auFile.typescriptBlocks[0].length;
-        position += fileLength + auFile.typescriptBlocks[0].className.length + value.length;        
+        pos += fileLength + auFile.typescriptBlocks[0].className.length + value.length;
       } else if (file instanceof HtmlFile) {
-        console.log('html file');
+        // console.log('html file');
         const htmlFile = file as HtmlFile;
         const fileLength = htmlFile.code.length;
-        position += fileLength + htmlFile.className.length + value.length;
+        pos += fileLength + htmlFile.className.length + value.length;
       }
 
       const service = getLanguageService(this.workSpace.path, this.workSpace.files, value);
 
       const completions = service.getCompletionsAtPosition(
         uri,
-        position,
+        pos,
         {
           includeExternalModuleExports: false,
-          includeInsertTextCompletions: false
-        }
+          includeInsertTextCompletions: false,
+        },
       );
 
       if (completions.isMemberCompletion) {
-        result.push(...completions.entries.map(item => {
+        result.push(...completions.entries.map((item) => {
 
           const eventBindingCommands = ['delegate', 'trigger', 'call'];
           const itemKind = toKind(item.kind);
 
-          if (eventBindingCommands.some(i => i === bindingName)) {
+          if (eventBindingCommands.some((i) => i === bindingName)) {
             if (itemKind === CompletionItemKind.Method) {
               return {
                 documentation: undefined,
@@ -92,32 +92,32 @@ export default class AttributeCompletionFactory extends BaseAttributeCompletionF
                 insertTextFormat: InsertTextFormat.Snippet,
                 kind: itemKind,
                 label: item.name,
-              }
+              };
             } else {
               return undefined;
             }
           } else {
             return {
               documentation: undefined,
-              insertText: item.name + (itemKind === CompletionItemKind.Method ? '()': ''),
+              insertText: item.name + (itemKind === CompletionItemKind.Method ? '()' : ''),
               insertTextFormat: InsertTextFormat.Snippet,
               kind: itemKind,
               label: item.name,
-            }            
+            };
           }
         }));
       }
     }
 
-    return result.filter(i => i !== undefined);
+    return result.filter((i) => i !== undefined);
   }
 }
 
 function toKind(kind: string) {
-  switch(kind) {
-    case "method":
+  switch (kind) {
+    case 'method':
       return CompletionItemKind.Method;
-    case "property":
+    case 'property':
       return CompletionItemKind.Property;
     default:
       return CompletionItemKind.Text;
@@ -126,18 +126,18 @@ function toKind(kind: string) {
 
 function includeCodeAutoComplete(application, result, path) {
   path = path.toLowerCase();
-  const compoment = application.components.find(i => i.paths.map(x => x.toLowerCase()).indexOf(path) > -1);
+  const compoment = application.components.find((i) => i.paths.map((x) => x.toLowerCase()).indexOf(path) > -1);
 
   if (compoment) {
     if (compoment.viewModel) {
-      compoment.viewModel.methods.forEach(x => {
+      compoment.viewModel.methods.forEach((x) => {
 
         let inner = '';
-        for(let i=0; i < x.parameters.length;i++) {
-          inner += `\$${i+1},`;
+        for (let i = 0; i < x.parameters.length; i++) {
+          inner += `\$${i + 1},`;
         }
         if (x.parameters.length) {
-          inner = inner.substring(0, inner.length-1);
+          inner = inner.substring(0, inner.length - 1);
         }
 
         result.push({
@@ -149,20 +149,20 @@ function includeCodeAutoComplete(application, result, path) {
         });
       });
 
-      compoment.viewModel.properties.forEach(x => {
+      compoment.viewModel.properties.forEach((x) => {
         let documentation = x.name;
         if (x.type) {
           documentation += ` (${x.type})`;
         }
 
         result.push({
-          documentation: documentation,
+          documentation,
           insertText: x.name,
           insertTextFormat: InsertTextFormat.Snippet,
           kind: CompletionItemKind.Property,
           label: x.name,
-        })
-      });          
+        });
+      });
     }
-  }  
+  }
 }

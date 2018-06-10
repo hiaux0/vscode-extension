@@ -1,8 +1,9 @@
-import { BindableAttribute, MozDocElement } from './_elementStructure';
+import { BindableAttribute } from './ElementStructure/BindableAttribute';
+import { MozDocElement } from './ElementStructure/MozDocElement';
 
 export default class DataElement extends MozDocElement {
 
-  public documentation = `The HTML <data> element links a given content with a machine-readable translation. 
+  public documentation = `The HTML <data> element links a given content with a machine-readable translation.
   If the content is time- or date-related, the <time> must be used.`;
 
   constructor() {

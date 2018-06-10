@@ -1,6 +1,6 @@
-import { MozDocElement } from './_elementStructure';
+import { MozDocElement } from './ElementStructure/MozDocElement';
 
-export default class ddElement extends MozDocElement {
+export default class DdElement extends MozDocElement {
 
   public documentation = `The HTML <dd> element indicates the description of a term in a description list (<dl>).`;
 

@@ -1,9 +1,9 @@
 import * as path from 'path';
-import { ExtensionContext, OutputChannel, window, languages, SnippetString, commands, TextEdit } from 'vscode';
+import { commands, ExtensionContext, languages, OutputChannel, SnippetString, TextEdit, window } from 'vscode';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient';
 import AureliaCliCommands from './aureliaCLICommands';
-import { RelatedFiles } from './relatedFiles';
 import { registerPreview } from './Preview/Register';
+import { RelatedFiles } from './relatedFiles';
 
 let outputChannel: OutputChannel;
 
@@ -18,12 +18,11 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(new RelatedFiles());
 
   // Register Code Actions
-  const edit = (uri: string, documentVersion: number, edits: TextEdit[]) =>
-  {
-    let textEditor = window.activeTextEditor;
+  const editAction = (uri: string, documentVersion: number, edits: TextEdit[]) => {
+    const textEditor = window.activeTextEditor;
     if (textEditor && textEditor.document.uri.toString() === uri) {
-      textEditor.edit(mutator => {
-        for(let edit of edits) {
+      textEditor.edit((mutator) => {
+        for (const edit of edits) {
           mutator.replace(client.protocol2CodeConverter.asRange(edit.range), edit.newText);
         }
       }).then((success) => {
@@ -34,8 +33,8 @@ export function activate(context: ExtensionContext) {
       });
     }
   };
-  context.subscriptions.push(commands.registerCommand('aurelia-attribute-invalid-case', edit));
-  context.subscriptions.push(commands.registerCommand('aurelia-binding-one-way-deprecated', edit));
+  context.subscriptions.push(commands.registerCommand('aurelia-attribute-invalid-case', editAction));
+  context.subscriptions.push(commands.registerCommand('aurelia-binding-one-way-deprecated', editAction));
 
   // Register Aurelia language server
   const serverModule = context.asAbsolutePath(path.join('dist', 'src', 'server', 'main.js'));
@@ -56,7 +55,7 @@ export function activate(context: ExtensionContext) {
 
   const client = new LanguageClient('html', 'Aurelia', serverOptions, clientOptions);
   registerPreview(context, window, client);
-  
+
   const disposable = client.start();
   context.subscriptions.push(disposable);
 }

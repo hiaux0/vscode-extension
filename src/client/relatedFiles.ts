@@ -1,7 +1,7 @@
 'use strict';
-import { commands, Disposable, TextEditor, TextEditorEdit, Uri } from 'vscode';
-import * as path from 'path';
 import * as fs from 'fs';
+import * as path from 'path';
+import { commands, Disposable, TextEditor, TextEditorEdit, Uri } from 'vscode';
 
 export class RelatedFiles implements Disposable {
   private disposable: Disposable;
@@ -48,6 +48,6 @@ export class RelatedFiles implements Disposable {
     fullPath = path.join(path.dirname(fullPath), fileName);
 
     return new Promise<string | undefined>((resolve, reject) =>
-        fs.access(fullPath, fs.constants.R_OK, err => resolve(err ? undefined : fullPath)));
+        fs.access(fullPath, fs.constants.R_OK, (err) => resolve(err ? undefined : fullPath)));
   }
 }
