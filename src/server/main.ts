@@ -1,13 +1,10 @@
 import 'reflect-metadata';
 import { CompletionList,
   createConnection,
-  Hover,
   IConnection,
-  InitializedParams,
   InitializeParams,
   InitializeResult,
   TextDocuments } from 'vscode-languageserver';
-import { MarkedString } from 'vscode-languageserver';
 
 import { Container } from 'aurelia-dependency-injection';
 import AureliaSettings from './AureliaSettings';
@@ -18,8 +15,6 @@ import { HtmlInvalidCaseCodeAction } from './CodeActions/HtmlInvalidCaseCodeActi
 import { OneWayBindingDeprecatedCodeAction } from './CodeActions/OneWayBindingDeprecatedCodeAction';
 import { HtmlValidator } from './Validations/HtmlValidator';
 
-import { connect } from 'net';
-import * as ts from 'typescript';
 import { FileAccess } from './FileParser/FileAccess';
 import FileParser from './FileParser/FileParser';
 import { AureliaApplication } from './FileParser/Model/AureliaApplication';
@@ -108,14 +103,15 @@ documents.onDidChangeContent(async (change) => {
 });
 
 // Lisen for completion requests
+
 connection.onCompletion(async (textDocumentPosition) => {
   const document = documents.get(textDocumentPosition.textDocument.uri);
   const text = document.getText();
   const offset = document.offsetAt(textDocumentPosition.position);
   const triggerCharacter = text.substring(offset - 1, offset);
-  const position = textDocumentPosition.position;
+
   return CompletionList.create(
-    await completionItemFactory.create(triggerCharacter, position, text, offset, textDocumentPosition.textDocument.uri), false);
+    await completionItemFactory.create(triggerCharacter, text, offset, textDocumentPosition.textDocument.uri), false);
 });
 
 connection.onRequest('aurelia-view-information', (filePath: string) => {
@@ -124,16 +120,3 @@ connection.onRequest('aurelia-view-information', (filePath: string) => {
 
 connection.listen();
 
-// async function featureToggles(featureToggles) {
-//   if (settings.featureToggles.smartAutocomplete) {
-//     console.log('smart auto complete init');
-//     try {
-//       let fileProcessor = new ProcessFiles();
-//       await fileProcessor.processPath();
-//       aureliaApplication.components = fileProcessor.components;
-//     } catch (ex) {
-//       console.log('------------- FILE PROCESSOR ERROR ---------------------');
-//       console.log(JSON.stringify(ex));
-//     }
-//   }
-// }

@@ -1,11 +1,11 @@
 import { autoinject } from 'aurelia-dependency-injection';
 import { CompletionItem, Position } from 'vscode-languageserver';
-import AttributeCompletionFactory from './Completions/AttributeCompletionFactory';
-import AttributeValueCompletionFactory from './Completions/AttributeValueCompletionFactory';
-import BindingCompletionFactory from './Completions/BindingCompletionFactory';
-import ElementCompletionFactory from './Completions/ElementCompletionFactory';
-import EmmetCompletionFactory from './Completions/EmmetCompletionFactory';
-import { AttributeDefinition, HTMLDocumentParser, TagDefinition } from './FileParser/HTMLDocumentParser';
+import AttributeCompletionFactory from './Completions/HtmlCompletions/AttributeCompletionFactory';
+import AttributeValueCompletionFactory from './Completions/HtmlCompletions/AttributeValueCompletionFactory';
+import BindingCompletionFactory from './Completions/HtmlCompletions/BindingCompletionFactory';
+import ElementCompletionFactory from './Completions/HtmlCompletions/ElementCompletionFactory';
+import EmmetCompletionFactory from './Completions/HtmlCompletions/EmmetCompletionFactory';
+import { AttributeDefinition, HTMLDocumentParser, TagDefinition } from './FileParser/Parsers/HTMLDocumentParser';
 
 @autoinject()
 export default class CompletionItemFactory {
@@ -20,7 +20,6 @@ export default class CompletionItemFactory {
 
   public async create(
     triggerCharacter: string,
-    position: Position,
     text: string,
     positionNumber: number,
     uri: string): Promise<CompletionItem[]> {

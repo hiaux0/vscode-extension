@@ -112,7 +112,7 @@ import RequireElement from './requireElement';
 @singleton()
 export default class ElementLibrary {
 
-  public elements;
+  public elements = {} as any;
 
   public unknownElement = new UnknownElement();
 

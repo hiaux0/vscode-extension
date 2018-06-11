@@ -1,13 +1,9 @@
-import { Parser, sourceContext } from 'aurelia-binding';
 import { ClassDeclaration, createSourceFile, forEachChild, MethodDeclaration, Node, ParameterDeclaration, PropertyDeclaration, ScriptKind, ScriptTarget, SyntaxKind, sys } from 'typescript';
-import { IFileParser } from '../FileParser';
-import { HTMLDocumentParser } from '../HTMLDocumentParser';
-import { ScriptFile } from '../ScriptFile';
+import { fileUriToPath } from './../../Util/FileUriToPath';
+import { ScriptFile } from './../Model/Files/ScriptFile';
+import { HTMLDocumentParser } from './HTMLDocumentParser';
 
-import * as ts from 'typescript';
-import { fileUriToPath } from '../../Util/FileUriToPath';
-
-export class ScriptFileParser implements IFileParser {
+export class ScriptFileParser {
 
   public async parse(uri: string): Promise<ScriptFile> {
 

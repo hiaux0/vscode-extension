@@ -1,7 +1,7 @@
 import { unescape } from 'querystring';
 import { Diagnostic, DiagnosticSeverity, Range, TextDocument } from 'vscode-languageserver';
 import { attributeInvalidCaseFix } from './../../Common/AttributeInvalidCaseFix';
-import { AttributeDefinition, TagDefinition } from './../../FileParser/HTMLDocumentParser';
+import { AttributeDefinition, TagDefinition } from '../../FileParser/Parsers/HTMLDocumentParser';
 
 export class InValidAttributeCasingValidation {
 

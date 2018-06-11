@@ -1,10 +1,9 @@
 import { Parser } from 'aurelia-binding';
 import { sys } from 'typescript';
-import { AuFile } from '../AuFile';
-import { IFileParser } from '../FileParser';
-import { HTMLDocumentParser, TagDefinition } from '../HTMLDocumentParser';
+import { AuFile } from '../Model/Files/AuFile';
+import { HTMLDocumentParser, TagDefinition } from './../Parsers/HTMLDocumentParser';
 
-export class AureliaFileParser implements IFileParser {
+export class AureliaFileParser {
 
   public async parse(path: string, content: string): Promise<AuFile> {
 

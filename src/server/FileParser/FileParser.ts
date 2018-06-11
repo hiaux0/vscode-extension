@@ -1,13 +1,8 @@
 import * as Path from 'path';
-import { ParsedFile } from './ParsedFile';
+import { ParsedFile } from './Model/Files/ParsedFile';
+import { UnknownFile } from './Model/Files/UnknownFile';
 import { AureliaFileParser } from './Parsers/AureliaFileParser';
 import { AureliaHtmlFileParser } from './Parsers/AureliaHtmlFileParser';
-import { UnknownFile } from './UnknownFile';
-
-// tslint:disable-next-line:interface-name
-export interface IFileParser {
-  parse(path: string, content?: string): Promise<ParsedFile>;
-}
 
 export default class FileParser {
 

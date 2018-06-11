@@ -6,7 +6,7 @@ export class TagDefinition {
         public name: string,
         public startOffset: number,
         public endOffset: number,
-        public selfClosing: boolean = null,
+        public selfClosing: boolean = false,
         public attributes: AttributeDefinition[] = []) {
     }
 }

@@ -1,6 +1,6 @@
 import { Command, Diagnostic, TextDocument, TextEdit } from 'vscode-languageserver';
 import { attributeInvalidCaseFix } from '../Common/AttributeInvalidCaseFix';
-import { HTMLDocumentParser } from './../FileParser/HTMLDocumentParser';
+import { HTMLDocumentParser } from '../FileParser/Parsers/HTMLDocumentParser';
 
 export class HtmlInvalidCaseCodeAction {
   public name = 'aurelia-attribute-invalid-case';

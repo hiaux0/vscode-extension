@@ -1,21 +1,17 @@
 import { autoinject } from 'aurelia-dependency-injection';
-import { defaultCipherList } from 'constants';
-import { StringLiteralType, SyntaxKind } from 'typescript';
 import {
   CompletionItem,
   CompletionItemKind,
   InsertTextFormat } from 'vscode-languageserver';
-import AureliaSettings from '../AureliaSettings';
-import { AuFile } from '../FileParser/AuFile';
-import { getLanguageService } from '../FileParser/AureliaLanguageServiceHost';
-import { HtmlFile } from '../FileParser/HtmlFile';
-import { Workspace } from '../Workspace';
-import {AureliaApplication} from './../FileParser/Model/AureliaApplication';
-import { fileUriToPath } from './../Util/FileUriToPath';
-import { normalizePath } from './../Util/NormalizePath';
+import AureliaSettings from '../../AureliaSettings';
+import { AuFile } from '../../FileParser/Model/Files/AuFile';
+import { getLanguageService } from '../../FileParser/AureliaLanguageServiceHost';
+import { HtmlFile } from '../../FileParser/Model/Files/HtmlFile';
+import { Workspace } from '../../Workspace';
+import {AureliaApplication} from './../../FileParser/Model/AureliaApplication';
+import ElementLibrary from './../Library/_elementLibrary';
+import { GlobalAttributes } from './../Library/ElementStructure/GlobalAttributes';
 import BaseAttributeCompletionFactory from './BaseAttributeCompletionFactory';
-import ElementLibrary from './Library/_elementLibrary';
-import { GlobalAttributes } from './Library/ElementStructure/GlobalAttributes';
 
 @autoinject()
 export default class AttributeCompletionFactory extends BaseAttributeCompletionFactory {

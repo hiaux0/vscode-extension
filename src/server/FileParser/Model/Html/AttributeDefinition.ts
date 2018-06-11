@@ -1,5 +1,3 @@
-import { MarkupData } from 'parse5';
-
 export class AttributeDefinition {
 
     public name: string;
@@ -7,7 +5,7 @@ export class AttributeDefinition {
     public endOffset: number;
     public startOffset: number;
 
-    constructor(name: string, public value: string, location?: MarkupData.Location) {
+    constructor(name: string, public value: string, location?) {
         if (name) {
         const parts = name.split('.');
         if (parts.length === 2) {

@@ -1,6 +1,6 @@
 import { autoinject } from 'aurelia-dependency-injection';
 import { Diagnostic, DiagnosticSeverity, Range, TextDocument } from 'vscode-languageserver';
-import { AttributeDefinition, HTMLDocumentParser, TagDefinition } from './../FileParser/HTMLDocumentParser';
+import { AttributeDefinition, HTMLDocumentParser, TagDefinition } from '../FileParser/Parsers/HTMLDocumentParser';
 
 import AureliaSettings from '../AureliaSettings';
 import { getLanguageService } from '../FileParser/AureliaLanguageServiceHost';

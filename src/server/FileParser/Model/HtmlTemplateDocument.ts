@@ -1,4 +1,4 @@
-import {TagDefinition} from './../HTMLDocumentParser';
+import {TagDefinition} from '../Parsers/HTMLDocumentParser';
 import {TemplateReference} from './TemplateReference';
 
 export class HtmlTemplateDocument {

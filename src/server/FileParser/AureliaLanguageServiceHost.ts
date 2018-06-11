@@ -10,9 +10,9 @@ import {
     sys,
 } from 'typescript';
 import Uri from 'vscode-uri';
-import { AuFile } from './AuFile';
-import {HtmlFile} from './HtmlFile';
-import {ParsedFile} from './ParsedFile';
+import { AuFile } from './Model/Files/AuFile';
+import {HtmlFile} from './Model/Files/HtmlFile';
+import {ParsedFile} from './Model/Files/ParsedFile';
 
 import * as ts from 'typescript';
 

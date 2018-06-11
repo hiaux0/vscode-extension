@@ -1,14 +1,10 @@
-import { Parser, sourceContext } from 'aurelia-binding';
 import { sys } from 'typescript';
 import * as Uri from 'vscode-uri';
-import { IFileParser } from '../FileParser';
-import { HTMLDocumentParser } from '../HTMLDocumentParser';
-import { HtmlFile } from './../HtmlFile';
-
-import * as ts from 'typescript';
+import { HtmlFile } from '../Model/Files/HtmlFile';
+import { HTMLDocumentParser } from '../Parsers/HTMLDocumentParser';
 import { ScriptFileParser } from './ScriptFileParser';
 
-export class AureliaHtmlFileParser implements IFileParser {
+export class AureliaHtmlFileParser{
 
   public async parse(uri: string, content: string): Promise<HtmlFile> {
 
