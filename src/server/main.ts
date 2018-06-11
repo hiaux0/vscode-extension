@@ -119,4 +119,3 @@ connection.onRequest('aurelia-view-information', (filePath: string) => {
 });
 
 connection.listen();
-

@@ -4,8 +4,8 @@ import {
   CompletionItemKind,
   InsertTextFormat } from 'vscode-languageserver';
 import AureliaSettings from '../../AureliaSettings';
-import { AuFile } from '../../FileParser/Model/Files/AuFile';
 import { getLanguageService } from '../../FileParser/AureliaLanguageServiceHost';
+import { AuFile } from '../../FileParser/Model/Files/AuFile';
 import { HtmlFile } from '../../FileParser/Model/Files/HtmlFile';
 import { Workspace } from '../../Workspace';
 import {AureliaApplication} from './../../FileParser/Model/AureliaApplication';

@@ -1,7 +1,7 @@
 import { autoinject } from 'aurelia-dependency-injection';
 import { CompletionItem, CompletionItemKind, InsertTextFormat } from 'vscode-languageserver';
-import AureliaSettings from './../../AureliaSettings';
 import { AttributeDefinition, TagDefinition } from '../../FileParser/Parsers/HTMLDocumentParser';
+import AureliaSettings from './../../AureliaSettings';
 import ElementLibrary from './../Library/_elementLibrary';
 import { GlobalAttributes } from './../Library/ElementStructure/GlobalAttributes';
 import BaseAttributeCompletionFactory from './BaseAttributeCompletionFactory';

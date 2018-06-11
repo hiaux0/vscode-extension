@@ -4,7 +4,7 @@ import { HtmlFile } from '../Model/Files/HtmlFile';
 import { HTMLDocumentParser } from '../Parsers/HTMLDocumentParser';
 import { ScriptFileParser } from './ScriptFileParser';
 
-export class AureliaHtmlFileParser{
+export class AureliaHtmlFileParser {
 
   public async parse(uri: string, content: string): Promise<HtmlFile> {
 

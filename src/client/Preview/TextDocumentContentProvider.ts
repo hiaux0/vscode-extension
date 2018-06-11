@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { LanguageClient } from 'vscode-languageclient';
-import { AuFile } from '../../server/FileParser/Model/Files/AuFile';
 import { FileAccess } from '../../server/FileParser/FileAccess';
+import { AuFile } from '../../server/FileParser/Model/Files/AuFile';
 
 export class TextDocumentContentProvider implements vscode.TextDocumentContentProvider {
 

@@ -28,9 +28,9 @@
     "vscode": "^1.22.0"
   },
   "categories": [
-    "Languages",
+    "Programming Languages",
     "Themes",
-    "Snippets"
+    "Formatters"
   ],
   "activationEvents": [
     "onLanguage:html",
