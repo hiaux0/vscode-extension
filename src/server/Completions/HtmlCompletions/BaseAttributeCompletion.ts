@@ -11,7 +11,7 @@ import { EmptyAttribute } from './../Library/ElementStructure/EmptyAttribute';
 import { SimpleAttribute } from './../Library/ElementStructure/SimpleAttribute';
 
 @autoinject()
-export default class BaseAttributeCompletionFactory {
+export default class BaseAttributeCompletion {
 
   constructor(protected library: ElementLibrary) { }
 

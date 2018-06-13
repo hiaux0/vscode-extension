@@ -1,5 +1,4 @@
 import { AttributeMap } from 'aurelia-templating-binding';
-import {AttributeDefinition, TagDefinition } from '../FileParser/Parsers/HTMLDocumentParser';
 
 export function attributeInvalidCaseFix(name: string, elementName: string) {
 

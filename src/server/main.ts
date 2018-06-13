@@ -8,13 +8,13 @@ import { CompletionList,
 
 import { Container } from 'aurelia-dependency-injection';
 import AureliaSettings from './AureliaSettings';
-import CompletionItemFactory from './CompletionItemFactory';
 import ElementLibrary from './Completions/Library/_elementLibrary';
 
 import { HtmlInvalidCaseCodeAction } from './CodeActions/HtmlInvalidCaseCodeAction';
 import { OneWayBindingDeprecatedCodeAction } from './CodeActions/OneWayBindingDeprecatedCodeAction';
 import { HtmlValidator } from './Validations/HtmlValidator';
 
+import { HtmlComplete } from './Completions/HtmlComplete';
 import { FileAccess } from './FileParser/FileAccess';
 import FileParser from './FileParser/FileParser';
 import { AureliaApplication } from './FileParser/Model/AureliaApplication';
@@ -31,7 +31,7 @@ documents.listen(connection);
 
 // Setup Aurelia dependency injection
 const globalContainer = new Container();
-const completionItemFactory = globalContainer.get(CompletionItemFactory) as CompletionItemFactory;
+// const completionItemFactory = globalContainer.get(CompletionItemFactory) as CompletionItemFactory;
 const aureliaApplication = globalContainer.get(AureliaApplication) as AureliaApplication;
 const settings = globalContainer.get(AureliaSettings) as AureliaSettings;
 const workspace = globalContainer.get(Workspace) as Workspace;
@@ -103,15 +103,18 @@ documents.onDidChangeContent(async (change) => {
 });
 
 // Lisen for completion requests
+const complete = globalContainer.get(HtmlComplete) as HtmlComplete;
 
 connection.onCompletion(async (textDocumentPosition) => {
-  const document = documents.get(textDocumentPosition.textDocument.uri);
-  const text = document.getText();
-  const offset = document.offsetAt(textDocumentPosition.position);
-  const triggerCharacter = text.substring(offset - 1, offset);
+    const document = documents.get(textDocumentPosition.textDocument.uri);
+    const text = document.getText();
+    const offset = document.offsetAt(textDocumentPosition.position);
+    const triggerCharacter = text.substring(offset - 1, offset);
+    const subText = text.substring(0, offset);
 
-  return CompletionList.create(
-    await completionItemFactory.create(triggerCharacter, text, offset, textDocumentPosition.textDocument.uri), false);
+    const completionItems = await complete.getCompletionItems(triggerCharacter, subText, offset);
+    const list = CompletionList.create(completionItems, false);
+    return list;
 });
 
 connection.onRequest('aurelia-view-information', (filePath: string) => {

@@ -1,20 +1,20 @@
+import { autoinject } from 'aurelia-dependency-injection';
 import { CompletionItem } from 'vscode-languageserver';
 import { HTMLDocumentParser, TagDefinition } from '../FileParser/Parsers/HTMLDocumentParser';
 import { CompletionType, CompletionTypeDetection } from './CompletionTypeDetection';
-import ElementCompletionFactory from './HtmlCompletions/ElementCompletionFactory';
+import ElementCompletion from './HtmlCompletions/ElementCompletion';
 
+@autoinject()
 export class HtmlComplete {
 
   constructor(
     private htmlDocumentParser: HTMLDocumentParser,
-    private elementCompletion: ElementCompletionFactory) { }
+    private elementCompletion: ElementCompletion) { }
 
   public async getCompletionItems(
     triggerCharacter: string,
     text: string,
-    positionNumber: number,
-    uri: string): Promise<CompletionItem[]> {
-
+    positionNumber: number): Promise<CompletionItem[]> {
       const nodes = await this.htmlDocumentParser.parse(text);
       const completionTypeDetection = new CompletionTypeDetection(text, nodes);
 
@@ -26,8 +26,7 @@ export class HtmlComplete {
         case CompletionType.AttributeValue:
           return Promise.resolve([]);
         case CompletionType.Element:
-          const partialNodes = await this.htmlDocumentParser.parse(text.substring(0, positionNumber));
-          return this.elementCompletion.create(this.getLastOpenNode(partialNodes));
+          return this.elementCompletion.create(this.getLastOpenNode(nodes));
         case CompletionType.Emmet:
           return Promise.resolve([]);
         default:

@@ -11,7 +11,7 @@ import { Workspace } from '../../Workspace';
 import {AureliaApplication} from './../../FileParser/Model/AureliaApplication';
 import ElementLibrary from './../Library/_elementLibrary';
 import { GlobalAttributes } from './../Library/ElementStructure/GlobalAttributes';
-import BaseAttributeCompletionFactory from './BaseAttributeCompletionFactory';
+import BaseAttributeCompletionFactory from './BaseAttributeCompletion';
 
 @autoinject()
 export default class AttributeCompletionFactory extends BaseAttributeCompletionFactory {

@@ -7,7 +7,7 @@ import ElementLibrary from './../Library/_elementLibrary';
 import { MozDocElement } from './../Library/ElementStructure/MozDocElement';
 
 @autoinject()
-export default class ElementCompletionFactory {
+export default class ElementCompletion {
 
   constructor(private library: ElementLibrary) { }
 

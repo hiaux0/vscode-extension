@@ -4,7 +4,7 @@ import { AttributeDefinition, TagDefinition } from '../../FileParser/Parsers/HTM
 import AureliaSettings from './../../AureliaSettings';
 import ElementLibrary from './../Library/_elementLibrary';
 import { GlobalAttributes } from './../Library/ElementStructure/GlobalAttributes';
-import BaseAttributeCompletionFactory from './BaseAttributeCompletionFactory';
+import BaseAttributeCompletionFactory from './BaseAttributeCompletion';
 
 @autoinject()
 export default class BindingCompletionFactory extends BaseAttributeCompletionFactory {
