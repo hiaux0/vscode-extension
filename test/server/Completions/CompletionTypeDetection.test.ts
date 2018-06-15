@@ -8,7 +8,7 @@ describe('getCompletionType', () => {
 
     // Arrange
     const documentText = '<';
-    const sut = new CompletionTypeDetection(documentText, []);
+    const sut = new CompletionTypeDetection(documentText, undefined);
 
     // Act
     const result = sut.getCompletionType('<', documentText.length);
@@ -21,7 +21,7 @@ describe('getCompletionType', () => {
 
     // Arrange
     const documentText = '<bar><';
-    const sut = new CompletionTypeDetection(documentText, [new TagDefinition(true, 'bar', 0, 5)]);
+    const sut = new CompletionTypeDetection(documentText, undefined);
 
     // Act
     const result = sut.getCompletionType('<', documentText.length);
@@ -34,7 +34,7 @@ describe('getCompletionType', () => {
 
     // Arrange
     const documentText = '[';
-    const sut = new CompletionTypeDetection(documentText, []);
+    const sut = new CompletionTypeDetection(documentText, undefined);
 
     // Act
     const result = sut.getCompletionType('[', documentText.length);
@@ -47,7 +47,7 @@ describe('getCompletionType', () => {
 
     // Arrange
     const documentText = '   [';
-    const sut = new CompletionTypeDetection(documentText, []);
+    const sut = new CompletionTypeDetection(documentText, undefined);
 
     // Act
     const result = sut.getCompletionType('[', documentText.length);
@@ -60,7 +60,7 @@ describe('getCompletionType', () => {
 
     // Arrange
     const documentText = 'x';
-    const sut = new CompletionTypeDetection(documentText, []);
+    const sut = new CompletionTypeDetection(documentText, undefined);
 
     // Act
     const result = sut.getCompletionType('x', documentText.length);
@@ -73,7 +73,7 @@ describe('getCompletionType', () => {
 
     // Arrange
     const documentText = '<bar ';
-    const sut = new CompletionTypeDetection(documentText, [new TagDefinition(true, 'bar', 0, 5)]);
+    const sut = new CompletionTypeDetection(documentText, new TagDefinition(true, 'bar', 0, 5));
 
     // Act
     const result = sut.getCompletionType(' ', documentText.length);
@@ -86,7 +86,7 @@ describe('getCompletionType', () => {
 
     // Arrange
     const documentText = '<bar  ';
-    const sut = new CompletionTypeDetection(documentText, [new TagDefinition(true, 'bar', 0, 6)]);
+    const sut = new CompletionTypeDetection(documentText, new TagDefinition(true, 'bar', 0, 6));
 
     // Act
     const result = sut.getCompletionType(' ', documentText.length);
@@ -99,7 +99,7 @@ describe('getCompletionType', () => {
 
     // Arrange
     const documentText = '<bar foo.';
-    const sut = new CompletionTypeDetection(documentText, [new TagDefinition(true, 'bar', 0, 9)]);
+    const sut = new CompletionTypeDetection(documentText, new TagDefinition(true, 'bar', 0, 9));
 
     // Act
     const result = sut.getCompletionType('.', documentText.length);
@@ -112,7 +112,7 @@ describe('getCompletionType', () => {
 
     // Arrange
     const documentText = '.';
-    const sut = new CompletionTypeDetection(documentText, []);
+    const sut = new CompletionTypeDetection(documentText, undefined);
 
     // Act
     const result = sut.getCompletionType('.', documentText.length);
@@ -125,7 +125,7 @@ describe('getCompletionType', () => {
 
     // Arrange
     const documentText = '<foo.';
-    const sut = new CompletionTypeDetection(documentText, [new TagDefinition(true, 'foo', 0, 5)]);
+    const sut = new CompletionTypeDetection(documentText, new TagDefinition(true, 'foo', 0, 5));
 
     // Act
     const result = sut.getCompletionType('.', documentText.length);
@@ -138,7 +138,7 @@ describe('getCompletionType', () => {
 
     // Arrange
     const documentText = `<foo attr='`;
-    const sut = new CompletionTypeDetection(documentText, [new TagDefinition(true, 'foo', 0, 11)]);
+    const sut = new CompletionTypeDetection(documentText, new TagDefinition(true, 'foo', 0, 11));
 
     // Act
     const result = sut.getCompletionType('\'', documentText.length);
@@ -151,7 +151,7 @@ describe('getCompletionType', () => {
 
     // Arrange
     const documentText = `<foo attr="`;
-    const sut = new CompletionTypeDetection(documentText, [new TagDefinition(true, 'foo', 0, 11)]);
+    const sut = new CompletionTypeDetection(documentText, new TagDefinition(true, 'foo', 0, 11));
 
     // Act
     const result = sut.getCompletionType('"', documentText.length);
@@ -164,7 +164,7 @@ describe('getCompletionType', () => {
 
     // Arrange
     const documentText = `<foo attr="bla.`;
-    const sut = new CompletionTypeDetection(documentText, [new TagDefinition(true, 'foo', 0, 15)]);
+    const sut = new CompletionTypeDetection(documentText, new TagDefinition(true, 'foo', 0, 15));
 
     // Act
     const result = sut.getCompletionType('.', documentText.length);
@@ -177,7 +177,7 @@ describe('getCompletionType', () => {
 
     // Arrange
     const documentText = `<foo attr="b`;
-    const sut = new CompletionTypeDetection(documentText, [new TagDefinition(true, 'foo', 0, 12)]);
+    const sut = new CompletionTypeDetection(documentText, new TagDefinition(true, 'foo', 0, 12));
 
     // Act
     const result = sut.getCompletionType('b', documentText.length);
@@ -190,7 +190,7 @@ describe('getCompletionType', () => {
 
     // Arrange
     const documentText = `<foo attr.bind='`;
-    const sut = new CompletionTypeDetection(documentText, [new TagDefinition(true, 'foo', 0, 16)]);
+    const sut = new CompletionTypeDetection(documentText, new TagDefinition(true, 'foo', 0, 16));
 
     // Act
     const result = sut.getCompletionType('\'', documentText.length);
@@ -203,7 +203,7 @@ describe('getCompletionType', () => {
 
     // Arrange
     const documentText = `<foo attr.bind="`;
-    const sut = new CompletionTypeDetection(documentText, [new TagDefinition(true, 'foo', 0, 16)]);
+    const sut = new CompletionTypeDetection(documentText, new TagDefinition(true, 'foo', 0, 16));
 
     // Act
     const result = sut.getCompletionType('"', documentText.length);

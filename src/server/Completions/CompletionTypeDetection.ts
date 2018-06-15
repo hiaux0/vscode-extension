@@ -2,21 +2,14 @@ import { TagDefinition } from '../FileParser/Parsers/HTMLDocumentParser';
 
 export class CompletionTypeDetection {
 
-  constructor(private text: string, private nodes: TagDefinition[]) { }
+  constructor(private text: string, private node: TagDefinition) { }
 
   public getCompletionType(
     triggerCharacter: string,
     positionNumber: number): CompletionType {
 
-      let insideTag: TagDefinition = null;
-      for (const node of this.nodes) {
-        if (!insideTag && positionNumber >= node.startOffset && positionNumber <= node.endOffset) {
-          insideTag = node;
-          break;
-        }
-      }
-
-      if (!insideTag) {
+      // if not inside of element
+      if (!this.node) {
 
         switch (triggerCharacter) {
           case '[':
@@ -25,11 +18,11 @@ export class CompletionTypeDetection {
             return CompletionType.Element;
         }
 
-        // Unable to detect completion type
+        // unable to detect completion type
         return CompletionType.None;
       }
 
-      const elementString = this.text.substring(insideTag.startOffset, positionNumber);
+      const elementString = this.text.substring(this.node.startOffset, positionNumber);
       if (this.notInAttributeValue(elementString)) {
 
         if (triggerCharacter === ' ') {

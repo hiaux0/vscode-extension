@@ -281,6 +281,7 @@
     "aurelia-cli": "^0.33.1",
     "aurelia-dependency-injection": "^1.3.2",
     "aurelia-templating-binding": "^1.4.1",
+    "mdn-browser-compat-data": "0.0.38",
     "parse-gitignore": "^0.5.1",
     "parse5": "^5.0.0",
     "parse5-sax-parser": "^5.0.0",

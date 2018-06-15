@@ -3,7 +3,8 @@ import {
   CompletionItem,
   CompletionItemKind,
   InsertTextFormat,
-  MarkedString } from 'vscode-languageserver';
+  MarkupContent,
+  MarkupKind} from 'vscode-languageserver';
 import ElementLibrary from './../Library/_elementLibrary';
 import { BaseElement } from './../Library/ElementStructure/BaseElement';
 import { BindableAttribute } from './../Library/ElementStructure/BindableAttribute';
@@ -43,7 +44,10 @@ export default class BaseAttributeCompletion {
       if (value instanceof BindableAttribute) {
         result.push({
           detail: 'Bindable Attribute',
-          documentation: MarkedString.fromPlainText(value.documentation).toString(),
+          documentation: {
+            kind: MarkupKind.Markdown,
+            value: value.documentation,
+          } as MarkupContent,
           insertText: value.customBindingSnippet === null ? `${key}.bind=${quote}$0${quote}` : value.customBindingSnippet.replace('"', quote),
           insertTextFormat: InsertTextFormat.Snippet,
           kind: CompletionItemKind.Value,
@@ -54,7 +58,10 @@ export default class BaseAttributeCompletion {
       if (value instanceof EmptyAttribute) {
         result.push({
           detail: 'Empty Custom Attribute',
-          documentation: MarkedString.fromPlainText(value.documentation).toString(),
+          documentation: {
+            kind: MarkupKind.Markdown,
+            value: value.documentation,
+          } as MarkupContent,
           insertText: `${key}`,
           insertTextFormat: InsertTextFormat.PlainText,
           kind: CompletionItemKind.Property,
@@ -65,7 +72,10 @@ export default class BaseAttributeCompletion {
       if (value instanceof SimpleAttribute || value instanceof BindableAttribute) {
         result.push({
           detail: 'Attribute',
-          documentation: MarkedString.fromPlainText(value.documentation).toString(),
+          documentation: {
+            kind: MarkupKind.Markdown,
+            value: value.documentation,
+          } as MarkupContent,
           insertText: `${key}=${quote}$0${quote}`,
           insertTextFormat: InsertTextFormat.Snippet,
           kind: CompletionItemKind.Property,
@@ -96,7 +106,10 @@ export default class BaseAttributeCompletion {
 
       result.push({
         detail: 'Event',
-        documentation: value.documentation,
+        documentation: {
+          kind: MarkupKind.Markdown,
+          value: value.documentation,
+        } as MarkupContent,
         insertText: value.bubbles ? `${key}.delegate=${quote}$0${quote}` : `${key}.trigger=${quote}$0${quote}`,
         insertTextFormat: InsertTextFormat.Snippet,
         kind: CompletionItemKind.Function,

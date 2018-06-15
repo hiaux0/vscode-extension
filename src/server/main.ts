@@ -110,11 +110,9 @@ connection.onCompletion(async (textDocumentPosition) => {
     const text = document.getText();
     const offset = document.offsetAt(textDocumentPosition.position);
     const triggerCharacter = text.substring(offset - 1, offset);
-    const subText = text.substring(0, offset);
 
-    const completionItems = await complete.getCompletionItems(triggerCharacter, subText, offset);
-    const list = CompletionList.create(completionItems, false);
-    return list;
+    const completionItems = await complete.getCompletionItems(triggerCharacter, text, offset);
+    return CompletionList.create(completionItems, false);
 });
 
 connection.onRequest('aurelia-view-information', (filePath: string) => {

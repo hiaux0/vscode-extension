@@ -1,5 +1,5 @@
 import { autoinject } from 'aurelia-dependency-injection';
-import { CompletionItem, CompletionItemKind, InsertTextFormat } from 'vscode-languageserver';
+import { CompletionItem, CompletionItemKind, InsertTextFormat, MarkupContent, MarkupKind } from 'vscode-languageserver';
 import { AttributeDefinition, TagDefinition } from '../../FileParser/Parsers/HTMLDocumentParser';
 import AureliaSettings from './../../AureliaSettings';
 import ElementLibrary from './../Library/_elementLibrary';
@@ -7,7 +7,7 @@ import { GlobalAttributes } from './../Library/ElementStructure/GlobalAttributes
 import BaseAttributeCompletionFactory from './BaseAttributeCompletion';
 
 @autoinject()
-export default class BindingCompletionFactory extends BaseAttributeCompletionFactory {
+export default class BindingCompletion extends BaseAttributeCompletionFactory {
 
   constructor(library: ElementLibrary, private settings: AureliaSettings) { super(library); }
 
@@ -36,7 +36,10 @@ export default class BindingCompletionFactory extends BaseAttributeCompletionFac
         if (event.bubbles) {
           for (const binding of ['delegate', 'capture']) {
             result.push({
-              documentation: binding,
+              documentation: {
+                kind: MarkupKind.Markdown,
+                value: binding,
+              } as MarkupContent,
               insertText: binding + snippetPrefix,
               insertTextFormat: InsertTextFormat.Snippet,
               kind: CompletionItemKind.Property,
@@ -47,7 +50,10 @@ export default class BindingCompletionFactory extends BaseAttributeCompletionFac
 
         for (const binding of ['trigger', 'call']) {
           result.push({
-            documentation: binding,
+            documentation: {
+              kind: MarkupKind.Markdown,
+              value: binding,
+            } as MarkupContent,
             insertText: binding + snippetPrefix,
             insertTextFormat: InsertTextFormat.Snippet,
             kind: CompletionItemKind.Property,
@@ -65,7 +71,10 @@ export default class BindingCompletionFactory extends BaseAttributeCompletionFac
 
       for (const binding of this.settings.bindings.data) {
         result.push({
-          documentation: binding.documentation,
+          documentation: {
+            kind: MarkupKind.Markdown,
+            value: binding,
+          } as MarkupContent,
           insertText: `${binding.name}${snippetPrefix}`,
           insertTextFormat: InsertTextFormat.Snippet,
           kind: CompletionItemKind.Property,

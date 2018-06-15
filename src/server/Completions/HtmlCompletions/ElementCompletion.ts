@@ -2,7 +2,9 @@ import { autoinject } from 'aurelia-dependency-injection';
 import {
   CompletionItem,
   CompletionItemKind,
-  InsertTextFormat, MarkedString } from 'vscode-languageserver';
+  InsertTextFormat,
+  MarkupContent,
+  MarkupKind } from 'vscode-languageserver';
 import ElementLibrary from './../Library/_elementLibrary';
 import { MozDocElement } from './../Library/ElementStructure/MozDocElement';
 
@@ -21,7 +23,10 @@ export default class ElementCompletion {
         for (const childName of parentElementDef.permittedChildren) {
           result.push({
             detail: 'HTMLElement',
-            documentation: MarkedString.fromPlainText(this.library.elements[childName].documentation).toString(),
+            documentation: {
+              kind: MarkupKind.Markdown,
+              value: this.library.elements[childName].documentation,
+            } as MarkupContent,
             filterText: `${childName}>`,
             insertText: childName + '>',
             insertTextFormat: InsertTextFormat.PlainText,
@@ -38,7 +43,10 @@ export default class ElementCompletion {
         const item = this.library.elements[name];
         result.push({
           detail: 'HTMLElement',
-          documentation: MarkedString.fromPlainText(item.documentation).toString(),
+          documentation: {
+            kind: MarkupKind.Markdown,
+            value: item.documentation,
+          } as MarkupContent,
           filterText: `${name}>`,
           insertText: name + '>',
           insertTextFormat: InsertTextFormat.PlainText,

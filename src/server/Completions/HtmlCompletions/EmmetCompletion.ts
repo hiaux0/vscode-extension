@@ -6,7 +6,7 @@ import { GlobalAttributes } from './../Library/ElementStructure/GlobalAttributes
 import BaseAttributeCompletionFactory from './BaseAttributeCompletion';
 
 @autoinject()
-export default class EmmetCompletionFactory extends BaseAttributeCompletionFactory {
+export default class EmmetCompletion extends BaseAttributeCompletionFactory {
 
   constructor(library: ElementLibrary, private settings: AureliaSettings) { super(library); }
 
