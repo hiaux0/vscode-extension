@@ -9,10 +9,10 @@ import {
     ScriptKind,
     sys,
 } from 'typescript';
-import Uri from 'vscode-uri';
+import * as Uri from 'vscode-uri';
 import { AuFile } from './Model/Files/AuFile';
-import {HtmlFile} from './Model/Files/HtmlFile';
-import {ParsedFile} from './Model/Files/ParsedFile';
+import { HtmlFile } from './Model/Files/HtmlFile';
+import { ParsedFile } from './Model/Files/ParsedFile';
 
 import * as ts from 'typescript';
 
@@ -47,13 +47,24 @@ export class AureliaLanguageServiceHost implements LanguageServiceHost {
     }
     public getScriptKind?(fileName: string): ScriptKind {
         if (isAureliaFile(fileName)) {
-            const uri = Uri.file(fileName);
-            fileName = uri.fsPath;
-            return ScriptKind.TS;
+          return ScriptKind.TS;
+        } else if (isHtmlFile(fileName)) {
+
+          const tsUri = fileName.replace('.html', '.ts');
+          const tsFilePath = Uri.default.parse(tsUri).fsPath;
+          const jsUri = fileName.replace('.html', '.js');
+          const jsFilePath = Uri.default.parse(jsUri).fsPath;
+          if (sys.fileExists(tsFilePath)) {
+              return ScriptKind.TS;
+          } else if (sys.fileExists(jsFilePath)) {
+            return ScriptKind.JS;
           } else {
-            // NOTE: Typescript 2.3 should export getScriptKindFromFileName. Then this cast should be removed.
-            return (ts as any).getScriptKindFromFileName(fileName);
+            return ScriptKind.Unknown;
           }
+        } else {
+          // NOTE: Typescript 2.3 should export getScriptKindFromFileName. Then this cast should be removed.
+          return (ts as any).getScriptKindFromFileName(fileName);
+        }
     }
     public getScriptVersion(fileName: string): string {
         return '0';
@@ -86,6 +97,8 @@ export class AureliaLanguageServiceHost implements LanguageServiceHost {
             class Factory{create<T>(type: (new () => T)): T {return new type();}}
             const vm = new Factory().create(${auCode.className});
             vm.` + this.extra;
+
+            const xx = extraText.length;
 
             const text = auCode.code + extraText;
             return {
@@ -144,5 +157,8 @@ function defaultIgnorePatterns(workspacePath: string) {
   }
 
 function isAureliaFile(filename: string): boolean {
-    return Path.extname(filename) === '.au';
-  }
+  return Path.extname(filename) === '.au';
+}
+function isHtmlFile(filename: string): boolean {
+  return Path.extname(filename) === '.html';
+}

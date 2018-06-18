@@ -18,6 +18,7 @@ import { HtmlComplete } from './Completions/HtmlComplete';
 import { FileAccess } from './FileParser/FileAccess';
 import FileParser from './FileParser/FileParser';
 import { AureliaApplication } from './FileParser/Model/AureliaApplication';
+import HoverProviderFactory from './HoverProviderFactory';
 import { normalizePath } from './Util/NormalizePath';
 import { Workspace } from './Workspace';
 
@@ -48,6 +49,7 @@ connection.onInitialize(async (params: InitializeParams): Promise<InitializeResu
     capabilities: {
       codeActionProvider: true,
       completionProvider: { resolveProvider: false, triggerCharacters: ['<', ' ', '.', '[', '"', '\''] },
+      hoverProvider: true,
       textDocumentSync: documents.syncKind,
     },
   };
@@ -111,8 +113,20 @@ connection.onCompletion(async (textDocumentPosition) => {
     const offset = document.offsetAt(textDocumentPosition.position);
     const triggerCharacter = text.substring(offset - 1, offset);
 
-    const completionItems = await complete.getCompletionItems(triggerCharacter, text, offset);
+    if (!workspace.files.has(textDocumentPosition.textDocument.uri)) {
+      workspace.files.set(textDocumentPosition.textDocument.uri, await fileParser.parse(textDocumentPosition.textDocument.uri, text));
+    }
+
+    const completionItems = await complete.getCompletionItems(triggerCharacter, text, offset, document.uri);
     return CompletionList.create(completionItems, false);
+});
+
+const hover = globalContainer.get(HoverProviderFactory) as HoverProviderFactory;
+connection.onHover(async (textDocumentPosition) => {
+  const document = documents.get(textDocumentPosition.textDocument.uri);
+  const text = document.getText();
+  const offset = document.offsetAt(textDocumentPosition.position);
+  return hover.create(text, offset);
 });
 
 connection.onRequest('aurelia-view-information', (filePath: string) => {

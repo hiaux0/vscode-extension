@@ -1,14 +1,11 @@
 import { sys } from 'typescript';
 import * as Uri from 'vscode-uri';
 import { HtmlFile } from '../Model/Files/HtmlFile';
-import { HTMLDocumentParser } from '../Parsers/HTMLDocumentParser';
 import { ScriptFileParser } from './ScriptFileParser';
 
 export class AureliaHtmlFileParser {
 
   public async parse(uri: string, content: string): Promise<HtmlFile> {
-
-    const document = await this.getHtmlDocument(content);
 
     const htmlFile = new HtmlFile();
     htmlFile.fileName = uri;
@@ -17,18 +14,18 @@ export class AureliaHtmlFileParser {
     const tsFilePath = Uri.default.parse(tsUri).fsPath;
     if (sys.fileExists(tsFilePath)) {
         htmlFile.code = sys.readFile(tsFilePath);
+    } else {
+      const jsUri = uri.replace('.html', '.js');
+      const jsFilePath = Uri.default.parse(jsUri).fsPath;
+      htmlFile.code = sys.readFile(jsFilePath);
     }
 
     const scriptParser = new ScriptFileParser();
     const scriptFile = await scriptParser.parse(uri);
 
     htmlFile.className = scriptFile.classes[0].name;
+    htmlFile.length = scriptFile.length;
 
     return htmlFile;
-  }
-
-  private async getHtmlDocument(content) {
-    const docParser = new HTMLDocumentParser();
-    return await docParser.parse(content);
   }
 }

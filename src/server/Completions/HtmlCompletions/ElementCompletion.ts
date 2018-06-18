@@ -21,11 +21,18 @@ export default class ElementCompletion {
       const parentElementDef = this.library.elements[parent] as MozDocElement;
       if (parentElementDef && parentElementDef.permittedChildren && parentElementDef.permittedChildren.length) {
         for (const childName of parentElementDef.permittedChildren) {
+
+          const element = this.library.elements[childName];
+          let doc = element.documentation;
+          if (element instanceof MozDocElement) {
+            doc += '\n\n---\n\n' + element.licenceText;
+          }
+
           result.push({
             detail: 'HTMLElement',
             documentation: {
               kind: MarkupKind.Markdown,
-              value: this.library.elements[childName].documentation,
+              value: doc,
             } as MarkupContent,
             filterText: `${childName}>`,
             insertText: childName + '>',
@@ -41,11 +48,17 @@ export default class ElementCompletion {
     for (const name in this.library.elements) {
       if (this.library.elements[name]) {
         const item = this.library.elements[name];
+
+        let doc = item.documentation;
+        if (item instanceof MozDocElement) {
+          doc += '\n\n---\n\n' + item.licenceText;
+        }
+
         result.push({
           detail: 'HTMLElement',
           documentation: {
             kind: MarkupKind.Markdown,
-            value: item.documentation,
+            value: doc,
           } as MarkupContent,
           filterText: `${name}>`,
           insertText: name + '>',

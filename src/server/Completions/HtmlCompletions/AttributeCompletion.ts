@@ -16,19 +16,19 @@ export default class AttributeCompletion extends BaseAttributeCompletion {
     const element = this.getElement(elementName);
 
     if (element.hasGlobalAttributes) {
-      this.addAttributes(GlobalAttributes.attributes, result, existingAttributes, this.settings.quote);
+      this.addAttributes(GlobalAttributes.attributes, result, existingAttributes, this.settings.quote, element);
     }
 
     if (element.attributes) {
-      this.addAttributes(element.attributes, result, existingAttributes, this.settings.quote);
+      this.addAttributes(element.attributes, result, existingAttributes, this.settings.quote, element);
     }
 
     if (element.hasGlobalEvents) {
-      this.addEvents(GlobalAttributes.events, result, existingAttributes, this.settings.quote);
+      this.addEvents(GlobalAttributes.events, result, existingAttributes, this.settings.quote, element);
     }
 
     if (element.events) {
-      this.addEvents(element.events, result, existingAttributes, this.settings.quote);
+      this.addEvents(element.events, result, existingAttributes, this.settings.quote, element);
     }
 
     return result;

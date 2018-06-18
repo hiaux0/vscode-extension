@@ -21,7 +21,7 @@ export default class AElement extends MozDocElement {
       are converted to underscores. Most file systems limit some punctuation in file names,
       and browsers will adjust the suggested name accordingly.`));
     this.attributes.set('href',
-      new BindableAttribute(`ontains a URL or a URL fragment that the hyperlink points to.
+      new BindableAttribute(`Contains a URL or a URL fragment that the hyperlink points to.
       A URL fragment is a name preceded by a hash mark (#), which specifies an internal target location
       (an ID of an HTML element) within the current document. URLs are not restricted to Web (HTTP)-based
       documents, but can use any protocol supported by the browser. For example, file:, ftp:, and mailto:

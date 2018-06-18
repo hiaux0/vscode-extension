@@ -15,17 +15,17 @@ export default class EmmetCompletion extends BaseAttributeCompletionFactory {
     const element = this.getElement(elementName);
 
     if (element.hasGlobalAttributes) {
-      this.addAttributes(GlobalAttributes.attributes, result, [], this.settings.quote);
+      this.addAttributes(GlobalAttributes.attributes, result, [], this.settings.quote, element);
     }
     if (element.attributes) {
-      this.addAttributes(element.attributes, result, [], this.settings.quote);
+      this.addAttributes(element.attributes, result, [], this.settings.quote, element);
     }
 
     if (element.hasGlobalEvents) {
-      this.addEvents(GlobalAttributes.events, result, [], this.settings.quote);
+      this.addEvents(GlobalAttributes.events, result, [], this.settings.quote, element);
     }
     if (element.events) {
-      this.addEvents(element.events, result, [], this.settings.quote);
+      this.addEvents(element.events, result, [], this.settings.quote, element);
     }
 
     return result;

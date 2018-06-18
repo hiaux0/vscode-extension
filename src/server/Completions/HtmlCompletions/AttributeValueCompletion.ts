@@ -5,6 +5,7 @@ import {
   InsertTextFormat,
   MarkupContent,
   MarkupKind} from 'vscode-languageserver';
+import { MozDocElement } from '../Library/ElementStructure/MozDocElement';
 import ElementLibrary from './../Library/_elementLibrary';
 import { GlobalAttributes } from './../Library/ElementStructure/GlobalAttributes';
 import BaseAttributeCompletionFactory from './BaseAttributeCompletion';
@@ -26,10 +27,16 @@ export default class AttributeValueCompletion extends BaseAttributeCompletionFac
     const result: CompletionItem[] = [];
     if (attribute && attribute.values) {
       for (const [key, val] of attribute.values.entries()) {
+
+        let doc = val.documentation;
+        if (element instanceof MozDocElement) {
+          doc += '\n\n---\n\n' + element.licenceText;
+        }
+
         result.push({
             documentation: {
               kind: MarkupKind.Markdown,
-              value: val.documentation,
+              value: doc,
             } as MarkupContent,
             insertText: key,
             insertTextFormat: InsertTextFormat.Snippet,

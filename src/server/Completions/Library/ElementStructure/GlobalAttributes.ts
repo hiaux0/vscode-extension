@@ -1,8 +1,9 @@
 import { BaseAttribute } from './BaseAttribute';
 import { BindableAttribute } from './BindableAttribute';
-import { EmptyAttribute } from './EmptyAttribute';
+import { BindableAureliaAttribute } from './BindableAureliaAttribute';
+import { EmptyAureliaAttribute } from './EmptyAureliaAttribute';
 import { Event } from './Event';
-import { SimpleAttribute } from './SimpleAttribute';
+import { SimpleAureliaAttribute } from './SimpleAureliaAttribute';
 import { Value } from './Value';
 
 export class GlobalAttributes {
@@ -104,7 +105,7 @@ export class GlobalAttributes {
         ],
         [
           'repeat.for',
-          new BindableAttribute(
+          new BindableAureliaAttribute(
             `repeat over a set, map, or array`,
             'http://aurelia.io/hub.html#/doc/article/aurelia/templating/latest/templating-basics/9',
             'no-snippet',
@@ -113,40 +114,40 @@ export class GlobalAttributes {
         ],
         [
           'as-element',
-          new BindableAttribute(
+          new BindableAureliaAttribute(
             `In some cases, especially when creating table rows out of Aurelia custom elements, you may need to have a custom element masquerade as a standard HTML element. For example, if you're trying to fill table rows with data, you may need your custom element to appear as a <tr> row or <td> cell. This is where the as-element attribute comes in handy`,
             'http://aurelia.io/hub.html#/doc/article/aurelia/templating/latest/templating-basics/5'),
         ],
         [
           'ref',
-          new SimpleAttribute(`Use the ref binding command to create a reference to a DOM element.
+          new SimpleAureliaAttribute(`Use the ref binding command to create a reference to a DOM element.
           The ref command's most basic syntax is ref="expression".
           When the view is data-bound the specified expression will be assigned the DOM element.`,
           'http://aurelia.io/hub.html#/doc/article/aurelia/binding/latest/binding-basics/5'),
         ],
         [
           'element.ref',
-          new SimpleAttribute(`create a reference to the DOM element (same as ref="expression").`,
+          new SimpleAureliaAttribute(`create a reference to the DOM element (same as ref="expression").`,
           'http://aurelia.io/hub.html#/doc/article/aurelia/binding/latest/binding-basics/5'),
         ],
         [
           'view-model.ref',
-          new SimpleAttribute(`create a reference to a custom element's view-model.`,
+          new SimpleAureliaAttribute(`create a reference to a custom element's view-model.`,
           'http://aurelia.io/hub.html#/doc/article/aurelia/binding/latest/binding-basics/5'),
         ],
         [
           'view.ref',
-          new SimpleAttribute(`create a reference to a custom element's view instance (not an HTML Element).`,
+          new SimpleAureliaAttribute(`create a reference to a custom element's view instance (not an HTML Element).`,
           'http://aurelia.io/hub.html#/doc/article/aurelia/binding/latest/binding-basics/5'),
         ],
         [
           'controller.ref',
-          new SimpleAttribute(`create a reference to a custom element's controller instance.`,
+          new SimpleAureliaAttribute(`create a reference to a custom element's controller instance.`,
           'http://aurelia.io/hub.html#/doc/article/aurelia/binding/latest/binding-basics/5'),
         ],
         [
           'innerhtml',
-          new SimpleAttribute(``),
+          new SimpleAureliaAttribute(``),
         ],
         [
           'textcontent',
@@ -154,30 +155,30 @@ export class GlobalAttributes {
         ],
         [
           'show',
-          new BindableAttribute(`Binding to conditionally show markup in the DOM based on the value.
+          new BindableAureliaAttribute(`Binding to conditionally show markup in the DOM based on the value.
           different from "if" in that the markup is still added to the DOM, simply not shown.`,
           'http://aurelia.io/hub.html#/doc/api/aurelia/templating-resources/latest/class/Show'),
         ],
         [
           'if',
-          new BindableAttribute(`Binding to conditionally include or not include template logic depending on returned result
+          new BindableAureliaAttribute(`Binding to conditionally include or not include template logic depending on returned result
           - value should be Boolean or will be treated as such (truthy / falsey)`,
           'http://aurelia.io/hub.html#/doc/api/aurelia/templating-resources/latest/class/If'),
         ],
         [
           'with.bind',
-          new SimpleAttribute(`Binds the With with provided binding context and override context.`,
+          new EmptyAureliaAttribute(`Binds the With with provided binding context and override context.`,
           'http://aurelia.io/hub.html#/doc/api/aurelia/templating-resources/1.4.0/class/With'),
         ],
         [
           'view-spy',
-          new EmptyAttribute(`Attribute to be placed on any HTML element in a view to emit the View instance to
+          new EmptyAureliaAttribute(`Attribute to be placed on any HTML element in a view to emit the View instance to
           the debug console, giving you insight into the live View instance, including all child views, live bindings, behaviors and more.`,
           'http://aurelia.io/hub.html#/doc/api/aurelia/testing/1.0.0-beta.3.0.1/class/ViewSpy'),
         ],
         [
           'compile-spy',
-          new EmptyAttribute(`Attribute to be placed on any element to have it emit the View Compiler's TargetInstruction into the debug console,
+          new EmptyAureliaAttribute(`Attribute to be placed on any element to have it emit the View Compiler's TargetInstruction into the debug console,
           giving you insight into all the parsed bindings, behaviors and event handers for the targeted element.`,
           'http://aurelia.io/hub.html#/doc/api/aurelia/testing/1.0.0-beta.3.0.1/class/CompileSpy'),
         ],

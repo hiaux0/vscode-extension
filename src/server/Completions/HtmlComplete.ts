@@ -1,5 +1,5 @@
 import { autoinject } from 'aurelia-dependency-injection';
-import { CompletionItem } from 'vscode-languageserver';
+import { CompletionItem, CompletionItemKind, InsertTextFormat, MarkupContent, MarkupKind } from 'vscode-languageserver';
 import { AttributeDefinition, HTMLDocumentParser, TagDefinition } from '../FileParser/Parsers/HTMLDocumentParser';
 import { CompletionType, CompletionTypeDetection } from './CompletionTypeDetection';
 import AttributeCompletion from './HtmlCompletions/AttributeCompletion';
@@ -7,6 +7,12 @@ import AttributeValueCompletion from './HtmlCompletions/AttributeValueCompletion
 import BindingCompletion from './HtmlCompletions/BindingCompletion';
 import ElementCompletion from './HtmlCompletions/ElementCompletion';
 import EmmetCompletion from './HtmlCompletions/EmmetCompletion';
+
+import { displayPartsToString } from 'typescript';
+import { Workspace } from '../Workspace';
+import { getLanguageService } from './../FileParser/AureliaLanguageServiceHost';
+
+import { Parser } from 'aurelia-binding';
 
 @autoinject()
 export class HtmlComplete {
@@ -17,12 +23,14 @@ export class HtmlComplete {
     private attributeValueCompletion: AttributeValueCompletion,
     private bindingCompletion: BindingCompletion,
     private emmetCompletion: EmmetCompletion,
-    private elementCompletion: ElementCompletion) { }
+    private elementCompletion: ElementCompletion,
+    private workspace: Workspace) { }
 
   public async getCompletionItems(
     triggerCharacter: string,
     text: string,
-    positionNumber: number): Promise<CompletionItem[]> {
+    positionNumber: number,
+    uri: string): Promise<CompletionItem[]> {
 
       const nodes = await this.htmlDocumentParser.parse(text);
       let lastNode: TagDefinition;
@@ -54,7 +62,7 @@ export class HtmlComplete {
           const nextChar = text.substring(positionNumber, positionNumber + 1);
           return this.bindingCompletion.create(lastNode, attributeDef, nextChar);
         case CompletionType.AttributeValue:
-          return this.createDefaultAttributeValueCompletion(lastNode, positionNumber);
+          return this.createDefaultAttributeValueCompletion(lastNode, positionNumber, uri);
         case CompletionType.Element:
       return this.elementCompletion.create(this.getLastOpenNode(nodes));
         case CompletionType.Emmet:
@@ -79,7 +87,7 @@ export class HtmlComplete {
       return node !== undefined ? node.name : null;
     }
 
-    private createDefaultAttributeValueCompletion(lastNode: TagDefinition, positionNumber: number) {
+    private createDefaultAttributeValueCompletion(lastNode: TagDefinition, positionNumber: number, uri: string) {
 
       let attribute: AttributeDefinition;
       for (const node of lastNode.attributes) {
@@ -89,12 +97,87 @@ export class HtmlComplete {
         }
       }
 
+      const result: CompletionItem[] = [];
+
       // TypeScript attribute value completion
-      if (attribute.binding) {
-        return Promise.resolve([]);
+      try {
+        if (attribute.binding) {
+
+          const languageService = getLanguageService(this.workspace.path, this.workspace.files, attribute.value);
+          const position = this.workspace.files.get(uri).length + 156 + attribute.value.length;
+          const completions = languageService.getCompletionsAtPosition(
+            uri,
+            position,
+            {
+              includeExternalModuleExports: false,
+              includeInsertTextCompletions: false,
+            },
+          );
+
+          if (completions && completions.entries) {
+
+            for (const completion of completions.entries) {
+              if (completion.kind === 'warning') {
+                continue;
+              }
+
+              const details = languageService.getCompletionEntryDetails(uri, position, completion.name, {}, completion.source, undefined);
+              const doc = displayPartsToString(details.documentation);
+
+              result.push({
+                documentation: doc.length > 0 ? {
+                  kind: MarkupKind.Markdown,
+                  value: displayPartsToString(details.documentation),
+                } as MarkupContent : undefined,
+                insertText: completion.name,
+                insertTextFormat: InsertTextFormat.Snippet,
+                kind: getKind(completion.kind),
+                label: completion.name,
+                sortText: completion.sortText,
+              });
+            }
+            return result;
+          }
+        }
+      } catch (err) {
+        // tslint:disable-next-line:no-console
+        console.log(err);
       }
 
       // Default attribute value completion
-      return this.attributeValueCompletion.create(lastNode.name, attribute.name);
+      result.push(...this.attributeValueCompletion.create(lastNode.name, attribute.name));
+
+      return result;
     }
+}
+
+function getKind(kind: string): CompletionItemKind {
+  switch (kind) {
+    case 'primitive type':
+    case 'keyword':
+      return CompletionItemKind.Keyword;
+    case 'var':
+    case 'local var':
+      return CompletionItemKind.Variable;
+    case 'property':
+    case 'getter':
+    case 'setter':
+      return CompletionItemKind.Field;
+    case 'function':
+    case 'method':
+    case 'construct':
+    case 'call':
+    case 'index':
+      return CompletionItemKind.Function;
+    case 'enum':
+      return CompletionItemKind.Enum;
+    case 'module':
+      return CompletionItemKind.Module;
+    case 'class':
+      return CompletionItemKind.Class;
+    case 'interface':
+      return CompletionItemKind.Interface;
+    default:
+    return CompletionItemKind.Snippet;
+  }
 }

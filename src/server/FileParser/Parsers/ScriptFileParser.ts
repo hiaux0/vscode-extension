@@ -1,5 +1,5 @@
 import { ClassDeclaration, createSourceFile, forEachChild, MethodDeclaration, Node, ParameterDeclaration, PropertyDeclaration, ScriptKind, ScriptTarget, SyntaxKind, sys } from 'typescript';
-import { fileUriToPath } from './../../Util/FileUriToPath';
+import * as Uri from 'vscode-uri';
 import { ScriptFile } from './../Model/Files/ScriptFile';
 import { HTMLDocumentParser } from './HTMLDocumentParser';
 
@@ -8,7 +8,15 @@ export class ScriptFileParser {
   public async parse(uri: string): Promise<ScriptFile> {
 
     const scriptFile = new ScriptFile();
-    const path = fileUriToPath(uri.replace('.html', '.ts'));
+    let path = uri;
+    const jsPath = Uri.default.parse(uri.replace('.html', '.js')).fsPath;
+    const tsPath = Uri.default.parse(uri.replace('.html', '.ts')).fsPath;
+
+    if (sys.fileExists(tsPath)) {
+      path = tsPath;
+    } else if (sys.fileExists(jsPath)) {
+      path = jsPath;
+    }
     const tsContent = sys.readFile(path);
 
     const sourceFile = createSourceFile(
@@ -26,6 +34,7 @@ export class ScriptFileParser {
     });
 
     scriptFile.classes = classes;
+    scriptFile.length = tsContent.length;
 
     return scriptFile;
   }
