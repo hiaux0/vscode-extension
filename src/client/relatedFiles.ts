@@ -5,20 +5,41 @@ import * as fs from 'fs';
 import { AureliaConfigProperties } from './Model/AureliaConfigProperties';
 
 export class RelatedFiles implements Disposable {
-  private disposable: Disposable;
+  private disposables: Disposable[] = [];
 
   constructor() {
-    this.disposable = commands.registerTextEditorCommand('extension.auOpenRelated', this.onOpenRelated, this);
+    this.disposables.push(commands.registerTextEditorCommand('extension.auOpenRelated', this.onOpenRelated, this));
+
+    const fileExtensionsConfig = this.getFileExtensionsFromConfig();
+    const {
+      script: scriptExtension,
+      style: styleExtension,
+      unit: unitExtension,
+      view: viewExtension,
+    } = fileExtensionsConfig
+
+    this.disposables.push(commands.registerTextEditorCommand('extension.auOpenRelatedScript', this.openRelatedFactory(scriptExtension), this));
+    this.disposables.push(commands.registerTextEditorCommand('extension.auOpenRelatedStyle', this.openRelatedFactory(styleExtension), this));
+    this.disposables.push(commands.registerTextEditorCommand('extension.auOpenRelatedUnit', this.openRelatedFactory(unitExtension), this));
+    this.disposables.push(commands.registerTextEditorCommand('extension.auOpenRelatedView', this.openRelatedFactory(viewExtension), this));
   }
 
   public dispose() {
-    if (this.disposable) {
-      this.disposable.dispose();
+    if (this.disposables.length) {
+      this.disposables.forEach((disposable) => {
+        disposable.dispose();
+      });
     }
   }
 
   private getFileExtensionsFromConfig() {
-    return workspace.getConfiguration().get<AureliaConfigProperties['relatedFiles']>('aurelia.relatedFiles');
+    const defaultSettings = {
+      script: '.js',
+      style: '.less',
+      unit: '.spec.js',
+      view: '.html',
+    };
+    return workspace.getConfiguration().get<AureliaConfigProperties['relatedFiles']>('aurelia.relatedFiles', defaultSettings);
   }
 
   private async onOpenRelated(editor: TextEditor, edit: TextEditorEdit) {
@@ -44,6 +65,22 @@ export class RelatedFiles implements Disposable {
 
     if (relatedFile) {
       commands.executeCommand('vscode.open', Uri.file(relatedFile), editor.viewColumn);
+    }
+  }
+
+  private openRelatedFactory(switchToExtension) {
+    return async (editor, edit) => {
+      if (!editor || !editor.document || editor.document.isUntitled) {
+        return;
+      }
+
+      const fileName = editor.document.fileName;
+      const extension = path.extname(fileName).toLowerCase();
+      const relatedFile = await this.relatedFileExists(fileName, switchToExtension);
+
+      if (relatedFile) {
+        commands.executeCommand('vscode.open', Uri.file(relatedFile), editor.viewColumn);
+      }
     }
   }
 
