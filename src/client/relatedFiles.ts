@@ -1,7 +1,8 @@
 'use strict';
-import { commands, Disposable, TextEditor, TextEditorEdit, Uri } from 'vscode';
+import { commands, Disposable, TextEditor, TextEditorEdit, Uri, workspace } from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
+import { AureliaConfigProperties } from './Model/AureliaConfigProperties';
 
 export class RelatedFiles implements Disposable {
   private disposable: Disposable;
@@ -16,6 +17,10 @@ export class RelatedFiles implements Disposable {
     }
   }
 
+  private getFileExtensionsFromConfig() {
+    return workspace.getConfiguration().get<AureliaConfigProperties['relatedFiles']>('aurelia.relatedFiles');
+  }
+
   private async onOpenRelated(editor: TextEditor, edit: TextEditorEdit) {
     if (!editor || !editor.document || editor.document.isUntitled) {
       return;
@@ -24,18 +29,17 @@ export class RelatedFiles implements Disposable {
     let relatedFile: string;
     const fileName = editor.document.fileName;
     const extension = path.extname(fileName).toLowerCase();
-    if (extension === '.html') {
-      const [tsFile, jsFile] = await Promise.all([
-        this.relatedFileExists(fileName, '.ts'),
-        this.relatedFileExists(fileName, '.js'),
-      ]);
-      if (tsFile) {
-        relatedFile = tsFile;
-      } else if (jsFile) {
-        relatedFile = jsFile;
-      }
-    } else if (extension === '.js' || extension === '.ts') {
-      relatedFile = await this.relatedFileExists(fileName, '.html');
+    const fileExtensionsConfig = this.getFileExtensionsFromConfig();
+    const {
+      view: viewExtension,
+      script: scriptExtension,
+    } = fileExtensionsConfig
+
+    if (extension === viewExtension) {
+      relatedFile = await this.relatedFileExists(fileName, scriptExtension);
+    }
+    else if (extension === scriptExtension) {
+      relatedFile = await this.relatedFileExists(fileName, viewExtension);
     }
 
     if (relatedFile) {
